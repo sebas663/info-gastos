@@ -1,0 +1,104 @@
+<div class="generic-container" ng-controller="AddBuyController as ctrl">
+  <div class="panel panel-default">
+    <div class="panel-heading"><span class="lead">Formulario de carga de compras</span></div>
+    <div class="formcontainer">
+      <form ng-submit="ctrl.submit()" name="myForm" class="form-horizontal">
+        <input type="hidden" ng-model="ctrl.buy.id" />
+
+
+        <!--                       <div class="row"> -->
+        <!--                           <div class="form-group col-md-12"> -->
+        <!--                               <label class="col-md-2 control-lable" for="date">Fecha</label> -->
+        <!--                               <div class="col-md-7"> -->
+        <!--                                   <input type="date" ng-model="ctrl.buy.date" id="date" class="username form-control input-sm" placeholder="Enter your name" required ng-minlength="3"/> -->
+        <!--                                   <div class="has-error" ng-show="myForm.$dirty"> -->
+        <!--                                       <span ng-show="myForm.uname.$error.required">This is a required field</span> -->
+        <!--                                       <span ng-show="myForm.uname.$error.minlength">Minimum length required is 3</span> -->
+        <!--                                       <span ng-show="myForm.uname.$invalid">This field is invalid </span> -->
+        <!--                                   </div> -->
+        <!--                               </div> -->
+        <!--                           </div> -->
+        <!--                       </div> -->
+
+
+        <div class="row">
+          <div class="form-group col-md-12">
+
+            <company-autocomplete></company-autocomplete>
+            <product-autocomplete></product-autocomplete>
+
+            <!--                               <label class="col-md-1 control-lable" for="product">Producto</label> -->
+
+            <!--                               <div class="col-md-3"> -->
+            <!--                                   <input type="text" ng-model="ctrl.buy.product" id="product" class="form-control input-sm" /> -->
+            <!--                               </div> -->
+
+            <label class="col-md-1 control-lable" for="external_code">Codigo</label>
+
+            <div class="col-md-3">
+              <input type="text" ng-model="ctrl.buy.external_code" id="external_code" class="form-control input-sm" placeholder="Ingrese el codigo del producto que figura en el ticket" />
+            </div>
+
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label class="col-md-1 control-lable" for="quantity">Cantidad</label>
+
+            <div class="col-md-3">
+              <input type="text" ng-model="ctrl.buy.quantity" id="quantity" class="form-control input-sm" />
+            </div>
+
+            <label class="col-md-1 control-lable" for="price">Precio</label>
+
+            <div class="col-md-3">
+              <input type="text" ng-model="ctrl.buy.price" id="price" class="form-control input-sm" />
+            </div>
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-actions floatRight">
+            <input type="submit"  value="{{!ctrl.buy.id ? 'Add' : 'Update'}}" class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid">
+            <button type="button" ng-click="ctrl.reset()" class="btn btn-warning btn-sm" ng-disabled="myForm.$pristine">Reset Form</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <!-- Default panel contents -->
+    <div class="panel-heading"><span class="lead">List of Users </span></div>
+    <div class="tablecontainer">
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th>ID.</th>
+          <th>Empresa</th>
+          <th>Pruducto</th>
+          <th>Codigo</th>
+          <th>Cantidad</th>
+          <th>Precio</th>
+          <th width="20%"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="u in ctrl.buys">
+          <td><span ng-bind="u.id"></span></td>
+          <td><span ng-bind="u.company"></span></td>
+          <td><span ng-bind="u.product"></span></td>
+          <td><span ng-bind="u.external_code"></span></td>
+          <td><span ng-bind="u.quantity"></span></td>
+          <td><span ng-bind="u.price"></span></td>
+          <td>
+            <button type="button" ng-click="ctrl.edit(u.id)" class="btn btn-success custom-width">Edit</button>  <button type="button" ng-click="ctrl.remove(u.id)" class="btn btn-danger custom-width">Remove</button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
