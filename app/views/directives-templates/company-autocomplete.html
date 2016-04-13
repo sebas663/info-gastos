@@ -1,0 +1,25 @@
+
+<!-- <label class="col-md-1 control-lable" for="company">Empresa</label> -->
+<div class="col-md-5" ng-controller="CompanyCtrl as cpnyctrl" >
+	<div layout="row" ng-cloak="" >
+     <div flex="80">
+        <md-content class="md-padding">
+            <md-autocomplete  md-selected-item="cpnyctrl.selectedItem"  md-search-text="cpnyctrl.searchText" md-selected-item-change="cpnyctrl.selectedItemChange(item)" md-items="item in cpnyctrl.querySearch(cpnyctrl.searchText)" md-item-text="item.display" md-min-length="0" placeholder="Empresa" >
+              <md-item-template>
+                <span md-highlight-text="cpnyctrl.searchText" md-highlight-flags="^i">{{item.display}}</span>
+              </md-item-template>
+            <md-not-found>
+              No se encontro "{{cpnyctrl.searchText}}" pulse icono para agregar.
+            </md-not-found>
+            </md-autocomplete>
+        </md-content>
+      </div>
+    <div flex="20" ng-controller="ModalCompanyCtrl" >
+      <md-button ng-click="showDialog($event)" class="md-primary md-raised">
+        Add
+      </md-button>
+    </div>
+  </div>
+
+</div>
+

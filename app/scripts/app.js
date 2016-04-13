@@ -8,7 +8,9 @@
  *
  * Main module of the application.
  */
-angular
-  .module('infoGastosApp', [
-    'ngAnimate'
+var App = angular.module('infoGastosApp',[
+    'ngAnimate',
+    'ngMaterial',
+    'ngMessages',
+    'material.svgAssetsCache'
   ]);

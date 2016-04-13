@@ -1,0 +1,43 @@
+<md-dialog aria-label="Empresa" class="fullscreen-dialog">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <md-button ng-click="closeDialog()" class="md-icon-button">
+        <md-icon class="fa fa-times fa-2x"></md-icon>
+      </md-button>
+      <h2 flex="flex">Guardar registro de una nueva Empresa</h2>
+    </div>
+  </md-toolbar>
+  <md-dialog-content>
+    <div  flex layout="row" layout-align="center center">
+      <div flex-sm="100" flex-gt-sm="90" flex-gt-md="70" flex-gt-lg="50" class="md-whiteframe-z2">
+        <md-content class="md-padding">
+          <div flex-sm="100" flex-gt-sm="80" layout-sm="column">
+            <form name="contactForm" data-ng-submit="sendMail()">
+              <md-input-container>
+                <label>Nombre:</label>
+                <input ng-model="contactName" required>
+              </md-input-container>
+              <md-input-container>
+                <label>Rubro:</label>
+                <input  ng-model="entry" required>
+              </md-input-container>
+              <md-input-container>
+                <label>Codigo:</label>
+                <input  ng-model="code" required>
+              </md-input-container>
+              <md-input-container>
+                <label>Sucursal:</label>
+                <input  ng-model="subsidiary" >
+              </md-input-container>
+              <md-input-container flex>
+                <label>Direccion:</label>
+                <input  ng-model="address" >
+              </md-input-container>
+              <md-button type="submit" class="md-primary"  aria-label="Save Project">Guardar</md-button>
+            </form>
+          </div>
+        </md-content>
+      </div>
+    </div>
+  </md-dialog-content>
+</md-dialog>
