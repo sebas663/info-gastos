@@ -6,6 +6,7 @@ App.controller('AddBuyController', AddBuyController);
 App.controller('CompanyCtrl', CompanyCtrl);
 App.controller('ProductCtrl', ProductCtrl);
 App.controller('ModalCompanyCtrl',ModalCompanyCtrl);
+App.controller('ModalProductCtrl',ModalProductCtrl);
 
 function AddBuyController ($scope,AddBuyService){
 
@@ -299,3 +300,24 @@ function ModalCompanyCtrl($scope, $mdDialog) {
     }
   }
   }
+function ModalProductCtrl($scope, $mdDialog) {
+  $scope.showDialog = showDialog;
+  function showDialog($event) {
+    var parentEl = angular.element(document.body);
+    $mdDialog.show({
+      targetEvent: $event,
+      parent: parentEl,
+      templateUrl:'views/directives-templates/formNewProduct.html',
+      controller: DialogController
+    });
+    function DialogController($scope, $mdDialog) {
+
+      $scope.closeDialog = function() {
+        $mdDialog.hide();
+      }
+      $scope.sendMail= function() {
+        $mdDialog.hide();
+      }
+    }
+  }
+}
