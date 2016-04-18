@@ -11,19 +11,19 @@ App.controller('ModalProductCtrl',ModalProductCtrl);
 function AddBuyController ($scope,AddBuyService){
 
 		  var self = this;
-          self.buy={id:null,company:'',product:'',external_code:'',quantity:0,price:0};
+          self.buy={id:null,companyID:null,productID:null,external_code:'',quantity:null,price:null,buyDate:null,total:null};
           self.buys=[];
-
+          self.buy.buyDate = new Date();
           self.fetchAll = function(){
-//              AddBuyService.fetchAll()
-//                  .then(
-//      					       function(d) {
-//      						        self.buys = d;
-//      					       },
-//            					function(errResponse){
-//            						console.error('Error while fetching Currencies');
-//            					}
-//      			       );
+             AddBuyService.fetchAll()
+                 .then(
+      					       function(d) {
+      						        self.buys = d;
+      					       },
+            					function(errResponse){
+            						console.error(errResponse);
+            					}
+      			       );
           };
 
           self.createBuy = function(buy){
@@ -51,7 +51,7 @@ function AddBuyController ($scope,AddBuyService){
 		              .then(
 				              self.fetchAll,
 				              function(errResponse){
-					               console.error('Error while deleting User.');
+					               console.error('Error while deleting Buy.');
 				              }
                   );
           };
@@ -60,7 +60,7 @@ function AddBuyController ($scope,AddBuyService){
 
           self.submit = function() {
               if(self.buy.id==null){
-//                  console.log('Saving New User', self.user);
+                  console.log('Saving New buy', self.buy);
                   self.createBuy(self.buy);
               }else{
                   self.updateBuy(self.buy, self.buy.id);
@@ -89,14 +89,15 @@ function AddBuyController ($scope,AddBuyService){
 
 
           self.reset = function(){
-        	  self.buy={id:null,company:'',product:'',external_code:'',quantity:0,price:0};
-              $scope.myForm.$setPristine(); //reset Form
+        	  self.buy={id:null,companyID:null,productID:null,external_code:'',quantity:null,price:null,buyDate:null,total:null};
+            $scope.myForm.$setPristine(); //reset Form
+            self.buy.buyDate = new Date();
           };
 
 //      }]);
        }
 
-function CompanyCtrl ($timeout, $q, $log) {
+function CompanyCtrl ($scope,$timeout, $q, $log) {
     var self = this;
 
     self.simulateQuery = false;
@@ -106,13 +107,6 @@ function CompanyCtrl ($timeout, $q, $log) {
     self.states        = loadAll();
     self.querySearch   = querySearch;
     self.selectedItemChange = selectedItemChange;
-
-
-    self.newState = newState;
-
-    function newState(state) {
-      alert("Sorry! You'll need to create a Constituion for " + state + " first!");
-    }
 
     // ******************************
     // Internal methods
@@ -135,12 +129,8 @@ function CompanyCtrl ($timeout, $q, $log) {
     }
 
     function selectedItemChange(item) {
-//    	var it = JSON.stringify(item);
-//    	var it3 = angular.fromJson(it);
-//        $log.info('Item changed to it ' + it);
-//        $log.info('Item changed to it3 ' + it3.display);
-//        self.id = item.id;
-//        $log.info('Id ' + self.id);
+        $scope.ctrl.buy.companyID = item.id;
+        $log.info('Id ' + $scope.ctrl.buy.companyID);
       }
 
     /**
@@ -187,7 +177,7 @@ function CompanyCtrl ($timeout, $q, $log) {
 
     }
   }
-function ProductCtrl ($timeout, $q, $log) {
+function ProductCtrl ($scope,$timeout, $q, $log) {
     var self = this;
 
     self.simulateQuery = false;
@@ -197,13 +187,6 @@ function ProductCtrl ($timeout, $q, $log) {
     self.states        = loadAll();
     self.querySearch   = querySearch;
     self.selectedItemChange = selectedItemChange;
-
-
-    self.newState = newState;
-
-    function newState(state) {
-      alert("Sorry! You'll need to create a Constituion for " + state + " first!");
-    }
 
     // ******************************
     // Internal methods
@@ -226,12 +209,8 @@ function ProductCtrl ($timeout, $q, $log) {
     }
 
     function selectedItemChange(item) {
-//    	var it = JSON.stringify(item);
-//    	var it3 = angular.fromJson(it);
-//        $log.info('Item changed to it ' + it);
-//        $log.info('Item changed to it3 ' + it3.display);
-//        self.id = item.id;
-//        $log.info('Id ' + self.id);
+      $scope.ctrl.buy.productID = item.id;
+      $log.info('Id ' + $scope.ctrl.buy.productID);
       }
 
     /**

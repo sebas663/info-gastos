@@ -26,11 +26,11 @@ body, .form-control{
 }
 
 .generic-container {
-  width:80%;
-  margin-left: 20px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  padding: 20px;
+  width:100%;
+  margin-left: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
   background-color: #EAE7E7;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -47,3 +47,12 @@ md-dialog.fullscreen-dialog {
   height: 70%;
   border-radius: 50;
 }
+.custom-width_100 {
+  width: 95% !important;
+}
+
+.md-input-custom {
+  width: 1000px;
+  height: 25px;
+ }
+

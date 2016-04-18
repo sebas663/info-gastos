@@ -14,3 +14,4 @@ var App = angular.module('infoGastosApp',[
     'ngMessages',
     'material.svgAssetsCache'
   ]);
+
