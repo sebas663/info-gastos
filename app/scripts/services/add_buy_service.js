@@ -1,7 +1,8 @@
 'use strict';
 
 App.factory('AddBuyService', ['$http', '$q', function($http, $q){
-	var url = "http://localhost:8081/control-gastos";
+	//var url = "http://localhost:8081/control-gastos";
+  var url = "http://172.16.4.147:8081/control-gastos";
 	return {
 
 			fetchAll: function() {
@@ -24,20 +25,20 @@ App.factory('AddBuyService', ['$http', '$q', function($http, $q){
 										return response.data;
 									},
 									function(errResponse){
-										console.error('Error while creating user');
+										console.error('Error while creating buy');
 										return $q.reject(errResponse);
 									}
 							);
 		    },
 
-		    updateBuy: function(user, id){
-					return $http.put(url + ' /addBuy/update/' + id, user)
+		    updateBuy: function(buy, id){
+					return $http.put(url + '/addBuy/update/' + id, buy)
 							.then(
 									function(response){
 										return response.data;
 									},
 									function(errResponse){
-										console.error('Error while updating user');
+										console.error('Error while updating buy');
 										return $q.reject(errResponse);
 									}
 							);
@@ -50,7 +51,7 @@ App.factory('AddBuyService', ['$http', '$q', function($http, $q){
 										return response.data;
 									},
 									function(errResponse){
-										console.error('Error while deleting user');
+										console.error('Error while deleting buy');
 										return $q.reject(errResponse);
 									}
 							);

@@ -14,6 +14,7 @@ function AddBuyController ($scope,AddBuyService){
           self.buy={id:null,companyID:null,productID:null,external_code:'',quantity:null,price:null,buyDate:null,total:null};
           self.buys=[];
           self.buy.buyDate = new Date();
+          self.resetAutocomplete = false;
           self.fetchAll = function(){
              AddBuyService.fetchAll()
                  .then(
@@ -60,7 +61,7 @@ function AddBuyController ($scope,AddBuyService){
 
           self.submit = function() {
               if(self.buy.id==null){
-                  console.log('Saving New buy', self.buy);
+     //             console.log('Saving New buy', self.buy);
                   self.createBuy(self.buy);
               }else{
                   self.updateBuy(self.buy, self.buy.id);
@@ -74,6 +75,8 @@ function AddBuyController ($scope,AddBuyService){
               for(var i = 0; i < self.buys.length; i++){
                   if(self.buys[i].id == id) {
                      self.buy = angular.copy(self.buys[i]);
+                     self.buy.buyDate = new Date(self.buy.buyDate);
+                     $scope.$broadcast('onEdit', {buy:self.buy});
                      break;
                   }
               }
@@ -92,14 +95,14 @@ function AddBuyController ($scope,AddBuyService){
         	  self.buy={id:null,companyID:null,productID:null,external_code:'',quantity:null,price:null,buyDate:null,total:null};
             $scope.myForm.$setPristine(); //reset Form
             self.buy.buyDate = new Date();
+            $scope.$broadcast('onSubmit', {resetAutocomplete:true});
           };
 
 //      }]);
        }
 
-function CompanyCtrl ($scope,$timeout, $q, $log) {
+function CompanyCtrl ($scope, $timeout, $q, $log, $filter) {
     var self = this;
-
     self.simulateQuery = false;
     self.isDisabled    = false;
 
@@ -129,9 +132,12 @@ function CompanyCtrl ($scope,$timeout, $q, $log) {
     }
 
     function selectedItemChange(item) {
+      if (item) {
         $scope.ctrl.buy.companyID = item.id;
         $log.info('Id ' + $scope.ctrl.buy.companyID);
+
       }
+    }
 
     /**
      * Build `states` list of key/value pairs
@@ -155,11 +161,11 @@ function CompanyCtrl ($scope,$timeout, $q, $log) {
   	              { display: 'Chicken', id: '7777' ,otra:'a' },
   	              { display: 'Corn', id: '9001',otra:'d' },
   	              { display: 'Cabbage', id: '6996',otra:'f' },
-  	              { display: 'Chili', id: '4242',otra:'h' },
+  	              { display: 'Chili1', id: '4242',otra:'h' },
   	        	  { display: 'seba', id: '4244' ,otra:'j'},
-  	        	  { display: 'Chili', id: '4245',otra:'y' },
-  	        	  { display: 'Chili', id: '4246',otra:'i' },
-  	        	  { display: 'Chili', id: '4247' ,otra:'k'},
+  	        	  { display: 'Chili2', id: '4245',otra:'y' },
+  	        	  { display: 'Chili3', id: '4246',otra:'i' },
+  	        	  { display: 'Chili4', id: '4247' ,otra:'k'},
   	              { display: 'Cheese', id: '1337',otra:'l' }
   	            ];
   	  return allStates;
@@ -170,14 +176,34 @@ function CompanyCtrl ($scope,$timeout, $q, $log) {
      */
     function createFilterFor(query) {
       var lowercaseQuery = angular.lowercase(query);
-
       return function filterFn(state) {
         return (state.id.indexOf(lowercaseQuery) === 0);
       };
 
     }
+    $scope.$on('onSubmit', function(event, obj) {
+      if(obj.resetAutocomplete){
+        clear();
+      }
+    })
+    $scope.$on('onEdit', function(event, obj) {
+      if(obj.buy){
+        setDefaults(obj.buy.companyID)
+      }
+    })
+    function clear() {
+      self.selectedItem = null;
+      self.searchText = "";
+    }
+    function setDefaults(companyID) {
+      var results = loadAll();
+      var result = $filter('filter')(results, {id:companyID})[0];
+      self.selectedItem = result.display;
+      self.searchText = result.display;
+      //$scope.ctrl.buy.companyID = result.id;
+    }
   }
-function ProductCtrl ($scope,$timeout, $q, $log) {
+function ProductCtrl ($scope, $timeout, $q, $log, $filter) {
     var self = this;
 
     self.simulateQuery = false;
@@ -209,9 +235,11 @@ function ProductCtrl ($scope,$timeout, $q, $log) {
     }
 
     function selectedItemChange(item) {
-      $scope.ctrl.buy.productID = item.id;
-      $log.info('Id ' + $scope.ctrl.buy.productID);
+      if (item) {
+        $scope.ctrl.buy.productID = item.id;
+        $log.info('Id ' + $scope.ctrl.buy.productID);
       }
+    }
 
     /**
      * Build `states` list of key/value pairs
@@ -255,6 +283,20 @@ function ProductCtrl ($scope,$timeout, $q, $log) {
         return (state.id.indexOf(lowercaseQuery) === 0);
       };
 
+    }
+    $scope.$on('onSubmit', function(event, obj) {
+      if(obj.resetAutocomplete){
+        clear();
+      }
+    })
+    $scope.$on('onEdit', function(event, obj) {
+      if(obj.buy){
+       // alert(obj.buy.productID);
+      }
+    })
+    function clear() {
+      self.selectedItem = null;
+      self.searchText = "";
     }
   }
 
