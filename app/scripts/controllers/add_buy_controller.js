@@ -117,13 +117,26 @@ function CompanyCtrl ($scope, CompanyService, $timeout, $q, $log, $filter) {
     self.isDisabled    = false;
 
     // list of `state` value/display objects
-    self.states        = loadAll();
+    //self.states = [];
+    self.states = self.fetchAll();
     self.querySearch   = querySearch;
     self.selectedItemChange = selectedItemChange;
 
     // ******************************
     // Internal methods
     // ******************************
+    self.fetchAll = function(){
+      CompanyService.fetchAll()
+        .then(
+          function(d) {
+            self.states = d;
+          },
+          function(errResponse){
+            console.error(errResponse);
+          }
+        );
+    };
+
 
     /**
      * Search for states... use $timeout to simulate
@@ -154,23 +167,6 @@ function CompanyCtrl ($scope, CompanyService, $timeout, $q, $log, $filter) {
     }
 
     /**
-     * Build `states` list of key/value pairs
-     */
-    function loadAll() {
-      var values;
-      CompanyService.fetchAll()
-        .then(
-          function(d) {
-            values = d;
-          },
-          function(errResponse){
-            console.error(errResponse);
-          }
-        );
-  	  return values;
-    }
-
-    /**
      * Create filter function for a query string
      */
     function createFilterFor(query) {
@@ -195,7 +191,7 @@ function CompanyCtrl ($scope, CompanyService, $timeout, $q, $log, $filter) {
       self.searchText = "";
     }
     function setDefaults(objectID) {
-      var results = loadAll();
+      var results = self.fetchAll();
       var result = $filter('filter')(results, {id:objectID})[0];
       if(result) {
         self.selectedItem = result.display;
