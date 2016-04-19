@@ -350,8 +350,9 @@ function ModalCompanyCtrl($scope, $mdDialog) {
     }
   }
   }
-function ModalProductCtrl($scope, $mdDialog) {
+function ModalProductCtrl($scope, $mdDialog, ProductService) {
   $scope.showDialog = showDialog;
+  $scope.product = {id:null,description:''};
   function showDialog($event) {
     var parentEl = angular.element(document.body);
     $mdDialog.show({
@@ -360,14 +361,32 @@ function ModalProductCtrl($scope, $mdDialog) {
       templateUrl:'views/directives-templates/formNewProduct.html',
       controller: DialogController
     });
-    function DialogController($scope, $mdDialog) {
-
+    function DialogController($scope, $mdDialog, ProductService) {
       $scope.closeDialog = function() {
         $mdDialog.hide();
       }
-      $scope.sendMail= function() {
+      $scope.create = function(product){
+        ProductService.create(product)
+          .then(
+            self.fetchAll,
+            function(errResponse){
+              console.error('Error while creating product.');
+            }
+          );
+      };
+      $scope.submit = function() {
+        if($scope.product.id==null){
+          //             console.log('Saving New buy', self.buy);
+          $scope.create($scope.product);
+        }
+//       else{
+//         self.update(self.buy, self.buy.id);
+//        console.log('User updated with id ', self.user.id);
+//        }
         $mdDialog.hide();
-      }
+        self.reset();
+      };
+
     }
   }
 }
