@@ -38,7 +38,7 @@ body, .form-control{
 }
 
 .custom-width {
-    width: 80px !important;
+    width: 70px;
 }
 md-dialog.fullscreen-dialog {
   max-width: 40%;

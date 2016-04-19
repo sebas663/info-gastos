@@ -1,7 +1,5 @@
 'use strict';
 
-//App.controller('AddBuyController', ['$scope','$timeout', '$q', '$log','AddBuyService',function($scope,$timeout, $q, $log ,AddBuyService) {
-
 App.controller('AddBuyController', AddBuyController);
 App.controller('CompanyCtrl', CompanyCtrl);
 App.controller('ProductCtrl', ProductCtrl);
@@ -32,7 +30,7 @@ function AddBuyController ($scope,AddBuyService){
 		              .then(
                       self.fetchAll,
 				              function(errResponse){
-					               console.error('Error while creating User.');
+					               console.error('Error while creating Buy.');
 				              }
                   );
           };
@@ -42,7 +40,7 @@ function AddBuyController ($scope,AddBuyService){
 		              .then(
 				              self.fetchAll,
 				              function(errResponse){
-					               console.error('Error while updating User.');
+					               console.error('Error while updating Buy.');
 				              }
                   );
           };
@@ -58,6 +56,19 @@ function AddBuyController ($scope,AddBuyService){
           };
 
           self.fetchAll();
+          //self.total =  angular.forEach(self.buys,function(value,index){
+           // var total = 0;
+            //total += value.total;
+            //return total;
+          //})
+          self.getTotal = function(){
+            var total = 0;
+            for(var i = 0; i < self.buys.length; i++){
+              var buy = self.buys[i];
+              total += buy.total;
+            }
+            return total;
+          }
 
           self.submit = function() {
               if(self.buy.id==null){
@@ -90,7 +101,6 @@ function AddBuyController ($scope,AddBuyService){
               self.deleteBuy(id);
           };
 
-
           self.reset = function(){
         	  self.buy={id:null,companyID:null,productID:null,external_code:'',quantity:null,price:null,buyDate:null,total:null};
             $scope.myForm.$setPristine(); //reset Form
@@ -101,7 +111,7 @@ function AddBuyController ($scope,AddBuyService){
 //      }]);
        }
 
-function CompanyCtrl ($scope, $timeout, $q, $log, $filter) {
+function CompanyCtrl ($scope, CompanyService, $timeout, $q, $log, $filter) {
     var self = this;
     self.simulateQuery = false;
     self.isDisabled    = false;
@@ -132,10 +142,14 @@ function CompanyCtrl ($scope, $timeout, $q, $log, $filter) {
     }
 
     function selectedItemChange(item) {
-      if (item) {
-        $scope.ctrl.buy.companyID = item.id;
-        $log.info('Id ' + $scope.ctrl.buy.companyID);
-
+      if (item && item.id) {
+         $scope.ctrl.buy.companyID = item.id;
+        //$log.info('item ' + item);
+        //$log.info('item.id ' + item.id);
+        //$log.info('$scope ' + $scope);
+        //$log.info('$scope.ctrl' + $scope.ctrl);
+        //$log.info('$scope.ctrl.buy ' + $scope.ctrl.buy);
+        //$log.info('$scope.ctrl.buy.companyID' + $scope.ctrl.buy.companyID);
       }
     }
 
@@ -143,32 +157,17 @@ function CompanyCtrl ($scope, $timeout, $q, $log, $filter) {
      * Build `states` list of key/value pairs
      */
     function loadAll() {
-//      var allStates = 'Alabama, Alaska, Arizona, Arkansas, California, Colorado, Connecticut, Delaware,\
-//              Florida, Georgia, Hawaii, Idaho, Illinois, Indiana, Iowa, Kansas, Kentucky, Louisiana,\
-//              Maine, Maryland, Massachusetts, Michigan, Minnesota, Mississippi, Missouri, Montana,\
-//              Nebraska, Nevada, New Hampshire, New Jersey, New Mexico, New York, North Carolina,\
-//              North Dakota, Ohio, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina,\
-//              South Dakota, Tennessee, Texas, Utah, Vermont, Virginia, Washington, West Virginia,\
-//              Wisconsin, Wyoming';
-//
-//      return allStates.split(/, +/g).map( function (state) {
-//        return {
-//          value: state.toLowerCase(),
-//          display: state
-//        };
-//      });
-  	  var allStates = [
-  	              { display: 'Chicken', id: '7777' ,otra:'a' },
-  	              { display: 'Corn', id: '9001',otra:'d' },
-  	              { display: 'Cabbage', id: '6996',otra:'f' },
-  	              { display: 'Chili1', id: '4242',otra:'h' },
-  	        	  { display: 'seba', id: '4244' ,otra:'j'},
-  	        	  { display: 'Chili2', id: '4245',otra:'y' },
-  	        	  { display: 'Chili3', id: '4246',otra:'i' },
-  	        	  { display: 'Chili4', id: '4247' ,otra:'k'},
-  	              { display: 'Cheese', id: '1337',otra:'l' }
-  	            ];
-  	  return allStates;
+      var values;
+      CompanyService.fetchAll()
+        .then(
+          function(d) {
+            values = d;
+          },
+          function(errResponse){
+            console.error(errResponse);
+          }
+        );
+  	  return values;
     }
 
     /**
@@ -188,19 +187,20 @@ function CompanyCtrl ($scope, $timeout, $q, $log, $filter) {
     })
     $scope.$on('onEdit', function(event, obj) {
       if(obj.buy){
-        setDefaults(obj.buy.companyID)
+        setDefaults(obj.buy.companyID);
       }
     })
     function clear() {
       self.selectedItem = null;
       self.searchText = "";
     }
-    function setDefaults(companyID) {
+    function setDefaults(objectID) {
       var results = loadAll();
-      var result = $filter('filter')(results, {id:companyID})[0];
-      self.selectedItem = result.display;
-      self.searchText = result.display;
-      //$scope.ctrl.buy.companyID = result.id;
+      var result = $filter('filter')(results, {id:objectID})[0];
+      if(result) {
+        self.selectedItem = result.display;
+        self.searchText = result.display;
+      }
     }
   }
 function ProductCtrl ($scope, $timeout, $q, $log, $filter) {
@@ -235,9 +235,9 @@ function ProductCtrl ($scope, $timeout, $q, $log, $filter) {
     }
 
     function selectedItemChange(item) {
-      if (item) {
-        $scope.ctrl.buy.productID = item.id;
-        $log.info('Id ' + $scope.ctrl.buy.productID);
+      if (item && item.id) {
+         $scope.ctrl.buy.productID = item.id;
+       // $log.info('Id ' + $scope.ctrl.buy.productID);
       }
     }
 
@@ -291,12 +291,20 @@ function ProductCtrl ($scope, $timeout, $q, $log, $filter) {
     })
     $scope.$on('onEdit', function(event, obj) {
       if(obj.buy){
-       // alert(obj.buy.productID);
+        setDefaults(obj.buy.productID)
       }
     })
     function clear() {
       self.selectedItem = null;
       self.searchText = "";
+    }
+    function setDefaults(objectID) {
+      var results = loadAll();
+      var result = $filter('filter')(results, {id:objectID})[0];
+      if(result) {
+        self.selectedItem = result.display;
+        self.searchText = result.display;
+      }
     }
   }
 
