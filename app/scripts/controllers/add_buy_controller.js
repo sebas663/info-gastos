@@ -11,6 +11,8 @@ function AddBuyController ($scope,AddBuyService){
 		  var self = this;
           self.buy={id:null,companyID:null,productID:null,external_code:'',quantity:null,price:null,buyDate:null,total:null};
           self.buys=[];
+          self.companies=[];
+          self.products=[];
           self.buy.buyDate = new Date();
           self.resetAutocomplete = false;
           self.fetchAll = function(){
@@ -56,11 +58,7 @@ function AddBuyController ($scope,AddBuyService){
           };
 
           self.fetchAll();
-          //self.total =  angular.forEach(self.buys,function(value,index){
-           // var total = 0;
-            //total += value.total;
-            //return total;
-          //})
+
           self.getTotal = function(){
             var total = 0;
             for(var i = 0; i < self.buys.length; i++){
@@ -79,6 +77,9 @@ function AddBuyController ($scope,AddBuyService){
 //                  console.log('User updated with id ', self.user.id);
               }
               self.reset();
+          };
+          self.submitBuys = function() {
+
           };
 
           self.edit = function(id){
@@ -107,7 +108,31 @@ function AddBuyController ($scope,AddBuyService){
             self.buy.buyDate = new Date();
             $scope.$broadcast('onSubmit', {resetAutocomplete:true});
           };
+          $scope.populateCompanies= function(array){
+            self.companies = array;
+          }
+          $scope.populateProducts = function(array){
+            self.products = array;
+          }
+          self.getCompanyById = function(id){
+            var company = null;
+            for(var i = 0; i < self.companies.length; i++){
+              if(self.companies[i].id == id) {
+                company = self.companies[i];
+              }
+            }
+            return company;
+          };
 
+          self.getProductById = function(id){
+            var product = null;
+            for(var i = 0; i < self.products.length; i++){
+              if(self.products[i].id == id) {
+                product = self.products[i];
+              }
+            }
+            return product;
+          };
 //      }]);
        }
 
@@ -117,8 +142,7 @@ function CompanyCtrl ($scope, CompanyService, $timeout, $q, $log, $filter) {
     self.isDisabled    = false;
 
     // list of `state` value/display objects
-    //self.states = [];
-    self.states = self.fetchAll();
+    self.states = [];
     self.querySearch   = querySearch;
     self.selectedItemChange = selectedItemChange;
 
@@ -130,14 +154,26 @@ function CompanyCtrl ($scope, CompanyService, $timeout, $q, $log, $filter) {
         .then(
           function(d) {
             self.states = d;
+
           },
           function(errResponse){
             console.error(errResponse);
           }
         );
     };
-
-
+    self.fetchAllPopulate = function(){
+      CompanyService.fetchAll()
+        .then(
+          function(d) {
+            $scope.populateCompanies(d);
+          },
+          function(errResponse){
+            console.error(errResponse);
+          }
+        );
+    };
+    self.states = self.fetchAll();
+    self.fetchAllPopulate();
     /**
      * Search for states... use $timeout to simulate
      * remote dataservice call.
@@ -191,29 +227,51 @@ function CompanyCtrl ($scope, CompanyService, $timeout, $q, $log, $filter) {
       self.searchText = "";
     }
     function setDefaults(objectID) {
-      var results = self.fetchAll();
-      var result = $filter('filter')(results, {id:objectID})[0];
-      if(result) {
-        self.selectedItem = result.display;
-        self.searchText = result.display;
-      }
+        var result = $filter('filter')(self.states, {id: objectID})[0];
+        if (result) {
+          self.selectedItem = result.description;
+          self.searchText = result.description;
+        }
     }
   }
-function ProductCtrl ($scope, $timeout, $q, $log, $filter) {
+function ProductCtrl ($scope, ProductService, $timeout, $q, $log, $filter) {
     var self = this;
 
     self.simulateQuery = false;
     self.isDisabled    = false;
 
     // list of `state` value/display objects
-    self.states        = loadAll();
+    self.states        = [];
     self.querySearch   = querySearch;
     self.selectedItemChange = selectedItemChange;
 
     // ******************************
     // Internal methods
     // ******************************
-
+    self.fetchAll = function(){
+      ProductService.fetchAll()
+        .then(
+          function(d) {
+            self.states = d;
+          },
+          function(errResponse){
+            console.error(errResponse);
+          }
+        );
+    };
+    self.fetchAllPopulate = function(){
+      ProductService.fetchAll()
+        .then(
+          function(d) {
+            $scope.populateProducts(d);
+          },
+          function(errResponse){
+            console.error(errResponse);
+          }
+        );
+    };
+    self.states = self.fetchAll();
+    self.fetchAllPopulate();
     /**
      * Search for states... use $timeout to simulate
      * remote dataservice call.
@@ -235,38 +293,6 @@ function ProductCtrl ($scope, $timeout, $q, $log, $filter) {
          $scope.ctrl.buy.productID = item.id;
        // $log.info('Id ' + $scope.ctrl.buy.productID);
       }
-    }
-
-    /**
-     * Build `states` list of key/value pairs
-     */
-    function loadAll() {
-//      var allStates = 'Alabama, Alaska, Arizona, Arkansas, California, Colorado, Connecticut, Delaware,\
-//              Florida, Georgia, Hawaii, Idaho, Illinois, Indiana, Iowa, Kansas, Kentucky, Louisiana,\
-//              Maine, Maryland, Massachusetts, Michigan, Minnesota, Mississippi, Missouri, Montana,\
-//              Nebraska, Nevada, New Hampshire, New Jersey, New Mexico, New York, North Carolina,\
-//              North Dakota, Ohio, Oklahoma, Oregon, Pennsylvania, Rhode Island, South Carolina,\
-//              South Dakota, Tennessee, Texas, Utah, Vermont, Virginia, Washington, West Virginia,\
-//              Wisconsin, Wyoming';
-//
-//      return allStates.split(/, +/g).map( function (state) {
-//        return {
-//          value: state.toLowerCase(),
-//          display: state
-//        };
-//      });
-  	  var allStates = [
-  	              { display: 'Chicken', id: '7777' ,otra:'a' },
-  	              { display: 'Corn', id: '9001',otra:'d' },
-  	              { display: 'Cabbage', id: '6996',otra:'f' },
-  	              { display: 'Chili', id: '4242',otra:'h' },
-  	        	  { display: 'seba', id: '4244' ,otra:'j'},
-  	        	  { display: 'Chili', id: '4245',otra:'y' },
-  	        	  { display: 'Chili', id: '4246',otra:'i' },
-  	        	  { display: 'Chili', id: '4247' ,otra:'k'},
-  	              { display: 'Cheese', id: '1337',otra:'l' }
-  	            ];
-  	  return allStates;
     }
 
     /**
@@ -295,12 +321,11 @@ function ProductCtrl ($scope, $timeout, $q, $log, $filter) {
       self.searchText = "";
     }
     function setDefaults(objectID) {
-      var results = loadAll();
-      var result = $filter('filter')(results, {id:objectID})[0];
-      if(result) {
-        self.selectedItem = result.display;
-        self.searchText = result.display;
-      }
+        var result = $filter('filter')(self.states, {id: objectID})[0];
+        if (result) {
+          self.selectedItem = result.description;
+          self.searchText = result.description;
+        }
     }
   }
 

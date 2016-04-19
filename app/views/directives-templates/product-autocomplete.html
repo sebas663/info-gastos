@@ -2,9 +2,9 @@
     <div layout="row" ng-cloak="" >
       <div flex="80">
         <md-content class="md-padding">
-          <md-autocomplete  md-selected-item="prdctrl.selectedItem"  md-search-text="prdctrl.searchText" md-selected-item-change="prdctrl.selectedItemChange(item)" md-items="item in prdctrl.querySearch(prdctrl.searchText)" md-item-text="item.display" md-min-length="0" placeholder="Producto" >
+          <md-autocomplete  md-selected-item="prdctrl.selectedItem"  md-search-text="prdctrl.searchText" md-selected-item-change="prdctrl.selectedItemChange(item)" md-items="item in prdctrl.querySearch(prdctrl.searchText)" md-item-text="item.description" md-min-length="0" placeholder="Producto" >
             <md-item-template>
-              <span md-highlight-text="prdctrl.searchText" md-highlight-flags="^i">{{item.display}}</span>
+              <span md-highlight-text="prdctrl.searchText" md-highlight-flags="^i">{{item.description}}</span>
             </md-item-template>
           <md-not-found>
             No se encontro "{{prdctrl.searchText}}" pulse icono para agregar.

@@ -1,12 +1,12 @@
 'use strict';
 
-App.factory('CompanyService', ['$http', '$q', function($http, $q){
+App.factory('ProductService', ['$http', '$q', function($http, $q){
 	//var url = "http://localhost:8081/control-gastos";
   var url = "http://172.16.4.147:8081/control-gastos";
 	return {
 
 			fetchAll: function() {
-					return $http.get(url + '/company/getAll/')
+					return $http.get(url + '/product/getAll/')
 							.then(
 									function(response){
 										return response.data;
@@ -19,7 +19,7 @@ App.factory('CompanyService', ['$http', '$q', function($http, $q){
 			},
 
       create: function(obj){
-        return $http.post(url + '/company/create/', obj)
+        return $http.post(url + '/product/create/', obj)
             .then(
                 function(response){
                   return response.data;
@@ -32,7 +32,7 @@ App.factory('CompanyService', ['$http', '$q', function($http, $q){
       },
 
       update: function(obj, id){
-					return $http.put(url + '/company/update/' + id, obj)
+					return $http.put(url + '/product/update/' + id, obj)
 							.then(
 									function(response){
 										return response.data;
@@ -45,7 +45,7 @@ App.factory('CompanyService', ['$http', '$q', function($http, $q){
 			},
 
 			delete: function(id){
-					return $http.delete( url + '/company/delete/'+id)
+					return $http.delete( url + '/product/delete/'+id)
 							.then(
 									function(response){
 										return response.data;

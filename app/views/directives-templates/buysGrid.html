@@ -1,40 +1,49 @@
 <div class="panel panel-default">
-  <!-- Default panel contents -->
-  <div class="panel-heading"><span class="lead">Lista de Compras </span></div>
-  <div class="tablecontainer">
-    <table class="table table-hover">
-      <thead>
-      <tr>
-        <!--<th>ID.</th>-->
-        <th>Fecha de compra</th>
-        <th>Empresa</th>
-        <th>Pruducto</th>
-        <th>Codigo externo</th>
-        <th>Cantidad</th>
-        <th>Precio</th>
-        <th>Subtotal</th>
-        <th width="15%"></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr ng-repeat="u in ctrl.buys">
-        <!-- <td><span ng-bind="u.id"></span></td>-->
-        <td><span ng-bind="u.buyDate| date: 'dd-MM-yyyy'"></span></td>
-        <td><span ng-bind="u.companyID"></span></td>
-        <td><span ng-bind="u.productID"></span></td>
-        <td><span ng-bind="u.external_code"></span></td>
-        <td><span ng-bind="u.quantity"></span></td>
-        <td><span ng-bind="u.price"></span></td>
-        <td><span ng-bind="u.total"></span></td>
-        <td>
-          <button type="button" ng-click="ctrl.edit(u.id)" class="btn btn-success custom-width">Editar</button>
-          <button type="button" ng-click="ctrl.remove(u.id)" class="btn btn-danger custom-width">Eliminar</button>
-        </td>
-      </tr>
-      <tr>
-        <td><span>TOTAL ${{ctrl.getTotal()}}</span></td>
-      </tr>
-      </tbody>
-    </table>
+  <div class="formcontainer">
+    <form ng-submit="ctrl.submitBuys()" name="myFormList" class="form-horizontal">
+      <!-- Default panel contents -->
+      <div class="panel-heading"><span class="lead">Lista de Compras </span></div>
+      <div class="tablecontainer">
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th>ID.</th>
+            <th>Fecha de compra</th>
+            <th>Empresa</th>
+            <th>Pruducto</th>
+            <th>Codigo externo</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Subtotal</th>
+            <th width="15%"></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr ng-repeat="u in ctrl.buys">
+            <td><span ng-bind="u.id"></span></td>
+            <td><span ng-bind="u.buyDate| date: 'dd-MM-yyyy'"></span></td>
+            <td><span ng-bind="ctrl.getCompanyById(u.companyID).description"></span></td>
+            <td><span ng-bind="ctrl.getProductById(u.productID).description "></span></td>
+            <td><span ng-bind="u.external_code"></span></td>
+            <td><span ng-bind="u.quantity"></span></td>
+            <td><span ng-bind="u.price"></span></td>
+            <td><span ng-bind="u.total"></span></td>
+            <td>
+              <button type="button" ng-click="ctrl.edit(u.id)" class="btn btn-success custom-width">Editar</button>
+              <button type="button" ng-click="ctrl.remove(u.id)" class="btn btn-danger custom-width">Eliminar</button>
+            </td>
+          </tr>
+          <tr>
+            <td><span>TOTAL ${{ctrl.getTotal()}}</span></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row">
+        <div class="form-actions floatRight">
+          <input type="submit"  value="Guardar" class="btn btn-primary btn-sm" ng-disabled="myFormList.$invalid">
+        </div>
+      </div>
+    </form>
   </div>
 </div>
