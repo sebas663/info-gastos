@@ -1,8 +1,6 @@
 'use strict';
 
 App.factory('CompanyService', ['$http', '$q', function($http, $q){
-	//var url = "http://localhost:8081/control-gastos";
-  var url = "http://172.16.4.147:8081/control-gastos";
 	return {
 
 			fetchAll: function() {
