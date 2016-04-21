@@ -12,10 +12,10 @@
       <div flex-sm="100" flex-gt-sm="90" flex-gt-md="70" flex-gt-lg="50" class="md-whiteframe-z2">
         <md-content class="md-padding">
           <div flex-sm="100" flex-gt-sm="80" layout-sm="column">
-            <form name="contactForm" data-ng-submit="sendMail()">
+            <form name="contactForm" ng-submit="submit()">
               <md-input-container>
                 <label>Nombre:</label>
-                <input ng-model="contactName" required>
+                <input ng-model="company.description" required>
               </md-input-container>
              <!-- <md-input-container>
                 <label>Rubro:</label>
