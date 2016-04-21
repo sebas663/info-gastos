@@ -56,16 +56,26 @@ function AddBuyController ($scope,AddBuyService){
                   );
           };
 
-          self.fetchAll();
+         self.saveBuys = function(buys){
+            AddBuyService.saveBuys(buys)
+              .then(
+                self.fetchAll,
+                function(errResponse){
+                  console.error('Error while save Buys.');
+                }
+              );
+         };
 
-          self.getTotal = function(){
+         self.fetchAll();
+
+         self.getTotal = function(){
             var total = 0;
             for(var i = 0; i < self.buys.length; i++){
               var buy = self.buys[i];
               total += buy.total;
             }
             return total;
-          }
+         }
 
           self.submit = function() {
               if(self.buy.id==null){
@@ -78,6 +88,14 @@ function AddBuyController ($scope,AddBuyService){
               self.reset();
           };
           self.submitBuys = function() {
+            if( self.buys.length > 0 ){
+              //             console.log('Saving New buy', self.buy);
+              self.saveBuys(self.buys);
+            }else{
+
+//                  console.log('User updated with id ', self.user.id);
+            }
+            self.reset();
 
           };
 
@@ -107,7 +125,7 @@ function AddBuyController ($scope,AddBuyService){
             self.buy.buyDate = new Date();
             $scope.$broadcast('onSubmit', {resetAutocomplete:true});
           };
-  
+
 
           $scope.populateCompanies= function(array){
             self.companies = array;

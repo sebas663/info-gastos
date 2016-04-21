@@ -53,7 +53,20 @@ App.factory('AddBuyService', ['$http', '$q', function($http, $q){
 										return $q.reject(errResponse);
 									}
 							);
-			}
+			},
+
+      saveBuys: function(buys){
+        return $http.post( url + '/addBuy/save/' + buys)
+          .then(
+            function(response){
+              return response.data;
+            },
+            function(errResponse){
+              console.error('Error while saving buys');
+              return $q.reject(errResponse);
+            }
+          );
+      }
 
 	};
 
