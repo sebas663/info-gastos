@@ -3,8 +3,6 @@
 App.controller('AddBuyController', AddBuyController);
 App.controller('CompanyCtrl', CompanyCtrl);
 App.controller('ProductCtrl', ProductCtrl);
-App.controller('ModalCompanyCtrl',ModalCompanyCtrl);
-//App.controller('ModalProductCtrl',ModalProductCtrl);
 
 function AddBuyController ($scope,AddBuyService){
 
@@ -20,6 +18,7 @@ function AddBuyController ($scope,AddBuyService){
                  .then(
       					       function(d) {
       						        self.buys = d;
+
       					       },
             					function(errResponse){
             						console.error(errResponse);
@@ -108,6 +107,8 @@ function AddBuyController ($scope,AddBuyService){
             self.buy.buyDate = new Date();
             $scope.$broadcast('onSubmit', {resetAutocomplete:true});
           };
+  
+
           $scope.populateCompanies= function(array){
             self.companies = array;
           }
@@ -133,18 +134,27 @@ function AddBuyController ($scope,AddBuyService){
             }
             return product;
           };
+          self.getObjectById = function(id,array){
+            var obj = null;
+            for(var i = 0; i < array.length; i++){
+              if(array[i].id == id) {
+                obj = array[i];
+              }
+            }
+            return obj;
+          };
 //      }]);
-       }
+}
 
-function CompanyCtrl ($scope, CompanyService, $timeout, $q, $log, $filter) {
+function CompanyCtrl ($scope, CompanyService, $timeout, $q, $log, $filter,$mdDialog) {
     var self = this;
     self.simulateQuery = false;
     self.isDisabled    = false;
-
-    // list of `state` value/display objects
-    self.states = [];
+    self.companies = [];
     self.querySearch   = querySearch;
     self.selectedItemChange = selectedItemChange;
+    $scope.company = {id:null,description:''};
+    $scope.showDialog = showDialog;
 
     // ******************************
     // Internal methods
@@ -153,8 +163,8 @@ function CompanyCtrl ($scope, CompanyService, $timeout, $q, $log, $filter) {
       CompanyService.fetchAll()
         .then(
           function(d) {
-            self.states = d;
-
+            self.companies = d;
+           // $log.info('fetchAll company' );
           },
           function(errResponse){
             console.error(errResponse);
@@ -172,14 +182,14 @@ function CompanyCtrl ($scope, CompanyService, $timeout, $q, $log, $filter) {
           }
         );
     };
-    self.states = self.fetchAll();
+    self.companies = self.fetchAll();
     self.fetchAllPopulate();
     /**
      * Search for states... use $timeout to simulate
      * remote dataservice call.
      */
     function querySearch (query) {
-      var results = query ? self.states.filter( createFilterFor(query) ) : self.states,
+      var results = query ? self.companies.filter( createFilterFor(query) ) : self.companies,
           deferred;
       if (self.simulateQuery) {
         deferred = $q.defer();
@@ -193,12 +203,6 @@ function CompanyCtrl ($scope, CompanyService, $timeout, $q, $log, $filter) {
     function selectedItemChange(item) {
       if (item && item.id) {
          $scope.ctrl.buy.companyID = item.id;
-        //$log.info('item ' + item);
-        //$log.info('item.id ' + item.id);
-        //$log.info('$scope ' + $scope);
-        //$log.info('$scope.ctrl' + $scope.ctrl);
-        //$log.info('$scope.ctrl.buy ' + $scope.ctrl.buy);
-        //$log.info('$scope.ctrl.buy.companyID' + $scope.ctrl.buy.companyID);
       }
     }
 
@@ -207,8 +211,8 @@ function CompanyCtrl ($scope, CompanyService, $timeout, $q, $log, $filter) {
      */
     function createFilterFor(query) {
       var lowercaseQuery = angular.lowercase(query);
-      return function filterFn(state) {
-        return (state.id.indexOf(lowercaseQuery) === 0);
+      return function filterFn(company) {
+        return (company.id.indexOf(lowercaseQuery) === 0);
       };
 
     }
@@ -227,23 +231,55 @@ function CompanyCtrl ($scope, CompanyService, $timeout, $q, $log, $filter) {
       self.searchText = "";
     }
     function setDefaults(objectID) {
-        var result = $filter('filter')(self.states, {id: objectID})[0];
+        var result = $filter('filter')(self.companies, {id: objectID})[0];
         if (result) {
           self.selectedItem = result.description;
           self.searchText = result.description;
         }
     }
+
+    function showDialog($event) {
+      var parentEl = angular.element(document.body);
+      $mdDialog.show({
+        targetEvent: $event,
+        parent: parentEl,
+        scope:$scope,         // use parent scope in template
+        preserveScope: true,
+        templateUrl:'views/directives-templates/formNewCompany.html',
+        controller:function($scope, $mdDialog) {
+          $scope.closeDialog = function() {
+            $mdDialog.hide();
+          }
+          $scope.create = function(company){
+            CompanyService.create(company)
+              .then(
+                function(d) {
+                  self.fetchAll();
+                },
+                function(errResponse){
+                  console.error(errResponse);
+                }
+              );
+          };
+          $scope.submit = function() {
+            if($scope.company.id==null){
+              $scope.create($scope.company);
+            }
+            $mdDialog.hide();
+          };
+        }
+      });
+    }
   }
-function ProductCtrl ($scope, ProductService, $timeout, $q, $log, $filter) {
+function ProductCtrl ($scope, ProductService, $timeout, $q, $log, $filter,$mdDialog) {
     var self = this;
-    $scope.product = {id:null,description:''};
     self.simulateQuery = false;
     self.isDisabled    = false;
-
-    // list of `state` value/display objects
-    self.states        = [];
+    self.products        = [];
     self.querySearch   = querySearch;
     self.selectedItemChange = selectedItemChange;
+    $scope.product = {id:null,description:''};
+    $scope.showDialog = showDialog;
 
     // ******************************
     // Internal methods
@@ -252,14 +288,17 @@ function ProductCtrl ($scope, ProductService, $timeout, $q, $log, $filter) {
       ProductService.fetchAll()
         .then(
           function(d) {
-            self.states = d;
-           // alert("inside fetch")
+            self.products = d;
+           // $log.info('fetchAll product' );
           },
           function(errResponse){
             console.error(errResponse);
           }
         );
     };
+    /**
+     *
+     */
     self.fetchAllPopulate = function(){
       ProductService.fetchAll()
         .then(
@@ -273,15 +312,13 @@ function ProductCtrl ($scope, ProductService, $timeout, $q, $log, $filter) {
     };
     self.fetchAll();
     self.fetchAllPopulate();
-
     /**
      * Search for states... use $timeout to simulate
      * remote dataservice call.
      */
     function querySearch (query) {
-      $log.info('querySearch product' );
-      self.fetchAll();
-      var results = query ? self.states.filter( createFilterFor(query) ) : self.states,
+      //$log.info('querySearch product' );
+      var results = query ? self.products.filter( createFilterFor(query) ) : self.products,
           deferred;
       if (self.simulateQuery) {
         deferred = $q.defer();
@@ -293,7 +330,7 @@ function ProductCtrl ($scope, ProductService, $timeout, $q, $log, $filter) {
     }
 
     function selectedItemChange(item) {
-      $log.info('selectedItemChange product ' );
+      //$log.info('selectedItemChange product ' );
       if (item && item.id) {
          $scope.ctrl.buy.productID = item.id;
        // $log.info('Id ' + $scope.ctrl.buy.productID);
@@ -307,8 +344,8 @@ function ProductCtrl ($scope, ProductService, $timeout, $q, $log, $filter) {
       $log.info('createFilterFor product' );
       var lowercaseQuery = angular.lowercase(query);
 
-      return function filterFn(state) {
-        return (state.id.indexOf(lowercaseQuery) === 0);
+      return function filterFn(product) {
+        return (product.id.indexOf(lowercaseQuery) === 0);
       };
 
     }
@@ -327,35 +364,42 @@ function ProductCtrl ($scope, ProductService, $timeout, $q, $log, $filter) {
       self.searchText = "";
     }
     function setDefaults(objectID) {
-        var result = $filter('filter')(self.states, {id: objectID})[0];
+        var result = $filter('filter')(self.products, {id: objectID})[0];
         if (result) {
           self.selectedItem = result.description;
           self.searchText = result.description;
         }
     }
-  }
-
-function ModalCompanyCtrl($scope, $mdDialog) {
-    $scope.showDialog = showDialog;
     function showDialog($event) {
       var parentEl = angular.element(document.body);
       $mdDialog.show({
         targetEvent: $event,
         parent: parentEl,
-        templateUrl:'views/directives-templates/formNewCompany.html',
-        locals: {
-          items: $scope.states
-        },
-        controller: DialogController
+        scope:$scope,         // use parent scope in template
+        preserveScope: true,
+        templateUrl:'views/directives-templates/formNewProduct.html',
+        controller:function($scope, $mdDialog) {
+          $scope.closeDialog = function() {
+            $mdDialog.hide();
+          }
+          $scope.create = function(product){
+            ProductService.create(product)
+              .then(
+                function(d) {
+                  self.fetchAll();
+                },
+                function(errResponse){
+                  console.error(errResponse);
+                }
+              );
+          };
+          $scope.submit = function() {
+            if($scope.product.id==null){
+              $scope.create($scope.product);
+            }
+            $mdDialog.hide();
+          };
+        }
       });
-      function DialogController($scope, $mdDialog) {
-
-        $scope.closeDialog = function() {
-          $mdDialog.hide();
-        }
-        $scope.sendMail= function() {
-          $mdDialog.hide();
-        }
-      }
     }
   }

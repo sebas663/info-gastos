@@ -1,50 +1,8 @@
 'use strict';
 
-App.directive('productAutocomplete', function($mdDialog) {
+App.directive('productAutocomplete', function($mdDialog,$log) {
 	  return {
-	    templateUrl: 'views/directives-templates/product-autocomplete.html',
-      scope: { products: "@products",
-               populateProducts: '&'
-      },
-      //controller:ProductCtrl,
-      link: function(scope) {
-        scope.showDialog = showDialog;
-        scope.product = {id:null,description:''};
-        function showDialog($event) {
-          var parentEl = angular.element(document.body);
-          $mdDialog.show({
-            targetEvent: $event,
-            parent: parentEl,
-            preserveScope: true,
-            templateUrl:'views/directives-templates/formNewProduct.html',
-            controller:function($scope, $mdDialog,ProductService) {
-                $scope.closeDialog = function() {
-                  $mdDialog.hide();
-                }
-                $scope.create = function(product){
-                  ProductService.create(product)
-                    .then(
-                      function(d) {
-
-                      },
-                      function(errResponse){
-                        console.error(errResponse);
-                      }
-                    );
-                };
-                $scope.submit = function() {
-                  if($scope.product.id==null){
-                    $scope.create($scope.product);
-                  }
-                  $mdDialog.hide();
-                };
-              }
-          });
-
-        };
-
-      }
-
+	    templateUrl: 'views/directives-templates/product-autocomplete.html'
     };
 	});
 
