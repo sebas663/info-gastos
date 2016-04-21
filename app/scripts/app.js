@@ -13,7 +13,6 @@ var App = angular.module('infoGastosApp',[
     'ngAnimate',
     'ngMaterial',
     'ngMessages',
-    'material.svgAssetsCache',
-    'ui.router'
+    'material.svgAssetsCache'
   ]);
   

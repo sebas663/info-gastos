@@ -2,7 +2,7 @@
     <div layout="row" ng-cloak="" >
       <div flex="80">
         <md-content class="md-padding">
-          <md-autocomplete  md-selected-item="prdctrl.selectedItem"  md-search-text="prdctrl.searchText" md-selected-item-change="prdctrl.selectedItemChange(item)" md-items="item in prdctrl.querySearch(prdctrl.searchText)" md-item-text="item.description" md-min-length="0" placeholder="Producto" >
+          <md-autocomplete  md-selected-item="prdctrl.selectedItem"  md-search-text="prdctrl.searchText" md-selected-item-change="prdctrl.selectedItemChange(item)" md-items="item in prdctrl.querySearch(prdctrl.searchText)" md-item-text="item.description" md-min-length="0" placeholder="Producto" md-no-cache="true">
             <md-item-template>
               <span md-highlight-text="prdctrl.searchText" md-highlight-flags="^i">{{item.description}}</span>
             </md-item-template>
@@ -13,11 +13,11 @@
         </md-content>
       </div>
 
-      <div flex="20" ng-controller="ModalProductCtrl" >
+      <!--<div flex="20" ng-controller="ModalProductCtrl" >-->
         <md-button ng-click="showDialog($event)" class="md-primary md-raised">
           Add
         </md-button>
-      </div>
-  </div>
-</div>
+      <!-- </div>-->
+   </div>
+ </div>
 

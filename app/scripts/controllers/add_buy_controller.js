@@ -4,7 +4,7 @@ App.controller('AddBuyController', AddBuyController);
 App.controller('CompanyCtrl', CompanyCtrl);
 App.controller('ProductCtrl', ProductCtrl);
 App.controller('ModalCompanyCtrl',ModalCompanyCtrl);
-App.controller('ModalProductCtrl',ModalProductCtrl);
+//App.controller('ModalProductCtrl',ModalProductCtrl);
 
 function AddBuyController ($scope,AddBuyService){
 
@@ -234,7 +234,7 @@ function CompanyCtrl ($scope, CompanyService, $timeout, $q, $log, $filter) {
         }
     }
   }
-function ProductCtrl ($scope, $mdDialog, ProductService, $timeout, $q, $log, $filter,$state) {
+function ProductCtrl ($scope, ProductService, $timeout, $q, $log, $filter) {
     var self = this;
     $scope.product = {id:null,description:''};
     self.simulateQuery = false;
@@ -279,7 +279,8 @@ function ProductCtrl ($scope, $mdDialog, ProductService, $timeout, $q, $log, $fi
      * remote dataservice call.
      */
     function querySearch (query) {
-      $log.info('querySearch ' );
+      $log.info('querySearch product' );
+      self.fetchAll();
       var results = query ? self.states.filter( createFilterFor(query) ) : self.states,
           deferred;
       if (self.simulateQuery) {
@@ -292,7 +293,7 @@ function ProductCtrl ($scope, $mdDialog, ProductService, $timeout, $q, $log, $fi
     }
 
     function selectedItemChange(item) {
-      $log.info('selectedItemChange ' );
+      $log.info('selectedItemChange product ' );
       if (item && item.id) {
          $scope.ctrl.buy.productID = item.id;
        // $log.info('Id ' + $scope.ctrl.buy.productID);
@@ -303,7 +304,7 @@ function ProductCtrl ($scope, $mdDialog, ProductService, $timeout, $q, $log, $fi
      * Create filter function for a query string
      */
     function createFilterFor(query) {
-      $log.info('createFilterFor ' );
+      $log.info('createFilterFor product' );
       var lowercaseQuery = angular.lowercase(query);
 
       return function filterFn(state) {
@@ -332,111 +333,29 @@ function ProductCtrl ($scope, $mdDialog, ProductService, $timeout, $q, $log, $fi
           self.searchText = result.description;
         }
     }
-    $scope.closeDialog = function() {
-      $mdDialog.hide();
-    }
-    $scope.create = function(product){
-      ProductService.create(product)
-        .then(
-          function(d) {
-           // self.states = d;
-            //self.fetchAll();
-           // alert("paso create")
-          },
-          function(errResponse){
-            console.error(errResponse);
-          }
-        );
-    };
-    $scope.submit = function() {
-      if($scope.product.id==null){
-        //             console.log('Saving New buy', self.buy);
-        $scope.create($scope.product);
-      }
-  //       else{
-  //         self.update(self.buy, self.buy.id);
-  //        console.log('User updated with id ', self.user.id);
-  //        }
-      $mdDialog.hide();
-      //self.reset();
-     
-      //alert("paso bubmit")
-    };
   }
 
 function ModalCompanyCtrl($scope, $mdDialog) {
-  $scope.showDialog = showDialog;
-  function showDialog($event) {
-    var parentEl = angular.element(document.body);
-    $mdDialog.show({
-      targetEvent: $event,
-      parent: parentEl,
-      templateUrl:'views/directives-templates/formNewCompany.html',
-      locals: {
-        items: $scope.states
-      },
-      controller: DialogController
-    });
-    function DialogController($scope, $mdDialog) {
+    $scope.showDialog = showDialog;
+    function showDialog($event) {
+      var parentEl = angular.element(document.body);
+      $mdDialog.show({
+        targetEvent: $event,
+        parent: parentEl,
+        templateUrl:'views/directives-templates/formNewCompany.html',
+        locals: {
+          items: $scope.states
+        },
+        controller: DialogController
+      });
+      function DialogController($scope, $mdDialog) {
 
-      $scope.closeDialog = function() {
-        $mdDialog.hide();
-      }
-      $scope.sendMail= function() {
-        $mdDialog.hide();
-      }
-    }
-  }
-  }
-function ModalProductCtrl($scope, $mdDialog, ProductService) {
-  $scope.showDialog = showDialog;
-  $scope.product = {id:null,description:''};
-  function showDialog($event) {
-    var parentEl = angular.element(document.body);
-    $mdDialog.show({
-      targetEvent: $event,
-      parent: parentEl,
-      scope: $scope,        // use parent scope in template
-      preserveScope: true,
-    //  onComplete: $scope.fetchAll,
-      templateUrl:'views/directives-templates/formNewProduct.html',
-      //locals: {
-       // items: $scope.states
-      //},
-      controller: ProductCtrl
-    });
-    // When the 'enter' animation finishes...
-    //function callParent($scope) {
-     //    $scope.callFetchAll;
-    //}
-    function DialogController($scope, $mdDialog, ProductService) {
-      $scope.closeDialog = function() {
-        $mdDialog.hide();
-      }
-      $scope.create = function(product){
-        ProductService.create(product)
-            .then(
-                function(d) {
-                  $scope.states = d;
-                },
-                function(errResponse){
-                  console.error(errResponse);
-                }
-             );
-      };
-      $scope.submit = function() {
-        if($scope.product.id==null){
-          //             console.log('Saving New buy', self.buy);
-          $scope.create($scope.product);
+        $scope.closeDialog = function() {
+          $mdDialog.hide();
         }
-//       else{
-//         self.update(self.buy, self.buy.id);
-//        console.log('User updated with id ', self.user.id);
-//        }
-        $mdDialog.hide();
-        //self.reset();
-      };
-
+        $scope.sendMail= function() {
+          $mdDialog.hide();
+        }
+      }
     }
   }
-}
