@@ -56,12 +56,7 @@ App.factory('AddBuyService', ['$http', '$q', '$log', function($http, $q, $log){
 			},
 
       saveBuys: function(buys){
-       // return $http.post( url + '/addBuy/save/' + angular.toJson(buys,true))
-       // $log.info(angular.toJson(buys,true) );
-      //  $log.info(angular.fromJson(buys));
-        //$log.info(buys);
-       // return $http.post( url + '/addBuy/save/' + JSON.stringify(buys) )
-         return $http.post( url + '/addBuy/save/' + buys)
+        return $http.post( url + '/addBuy/save/' , angular.toJson(buys))
           .then(
             function(response){
               return response.data;

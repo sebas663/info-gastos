@@ -171,7 +171,7 @@ function CompanyCtrl ($scope, CompanyService, $timeout, $q, $log, $filter,$mdDia
     self.companies = [];
     self.querySearch   = querySearch;
     self.selectedItemChange = selectedItemChange;
-    $scope.company = {id:null,description:''};
+    $scope.company = {id:null,description:'',entry:'',code:'',subsidiary:'',address:''};
     $scope.showDialog = showDialog;
 
     // ******************************
@@ -296,7 +296,7 @@ function ProductCtrl ($scope, ProductService, $timeout, $q, $log, $filter,$mdDia
     self.products        = [];
     self.querySearch   = querySearch;
     self.selectedItemChange = selectedItemChange;
-    $scope.product = {id:null,description:''};
+    $scope.product = {id:null,description:'',brand:'',code:'',type:'',subtype:'',size:'',packaging:''};
     $scope.showDialog = showDialog;
 
     // ******************************
