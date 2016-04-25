@@ -36,3 +36,8 @@ App.directive('buysGrid', function() {
     templateUrl: 'views/directives-templates/buysGrid.html'
   };
 });
+App.directive('boxDiscountGrid', function() {
+  return {
+    templateUrl: 'views/directives-templates/boxDiscountGrid.html'
+  };
+});

@@ -9,9 +9,13 @@
           <div class="form-group col-md-12">
             <datepicker></datepicker>
             <company-autocomplete></company-autocomplete>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-12 ">
             <product-autocomplete></product-autocomplete>
-           </div>
-         </div>
+          </div>
+        </div>
 
          <div class="row">
            <div class="form-group col-md-12">
@@ -30,5 +34,37 @@
        </form>
      </div>
    </div>
-    <buys-grid></buys-grid>
+  <div class="panel panel-default">
+    <div class="container">
+      <form ng-submit="ctrl.submitBuys()" name="myFormList" class="form-inline" role="form">
+        <!-- Default panel contents -->
+        <div class="panel-heading"><span class="lead">Lista de Compras </span></div>
+
+        <buys-grid></buys-grid>
+        <br>
+        <box-discount-grid></box-discount-grid>
+        <div>
+          <fieldset class="standard" >
+            <div layout="row" layout-wrap flex>
+              <!--<div flex="50" ng-repeat="item in items">-->
+              <!-- <md-checkbox ng-checked="exists(item, selected)" ng-click="toggle(item, selected)">
+                 {{ item }} <span ng-if="exists(item, selected)">selected</span>
+               </md-checkbox>-->
+              <md-checkbox>
+                <span>Tiene descuento en resumen?</span>
+              </md-checkbox>
+              <!--</div>-->
+            </div>
+          </fieldset>
+        </div>
+
+
+        <div class="row">
+          <div class="form-actions floatRight">
+            <input type="submit"  value="Guardar" class="btn btn-primary btn-sm" ng-disabled="myFormList.$invalid">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>

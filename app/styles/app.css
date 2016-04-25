@@ -11,6 +11,10 @@ body, .form-control{
 	float:right;
 	margin-right: 18px;
 }
+.floatLeft{
+  float:left;
+  margin-right: 18px;
+}
 
 .has-error{
 	color:red;
@@ -23,6 +27,7 @@ body, .form-control{
 
 .tablecontainer{
 	padding-left: 20px;
+  background-color: #DAE8E8;
 }
 
 .generic-container {
@@ -35,6 +40,17 @@ body, .form-control{
   border: 1px solid #ddd;
   border-radius: 4px;
   box-shadow: 0 0 30px black;
+}
+
+.ticket-container {
+  width:100%;
+  margin-left: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
 .custom-width {
