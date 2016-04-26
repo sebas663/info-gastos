@@ -2,26 +2,20 @@
   <table class="table table-hover">
     <thead>
     <tr>
+      <th>Descripcion</th>
       <th>Pruducto</th>
-      <th>Codigo externo</th>
       <th>Cantidad</th>
-      <th>Precio</th>
+      <th>Monto</th>
       <th>Subtotal</th>
-      <th width="15%"></th>
     </tr>
     </thead>
     <tbody>
     <tr ng-repeat="u in ctrl.buys">
       <td><span ng-bind="ctrl.getProductById(u.productID).description"></span></td>
-      <td><span ng-bind="u.external_code"></span></td>
       <td><span ng-bind="u.quantity"></span></td>
       <td><span ng-bind="u.price"></span></td>
       <td><span ng-bind="u.total"></span></td>
-      <td><md-checkbox></md-checkbox></td>
-      <td>
-        <button type="button" ng-click="ctrl.edit(u.id)" class="btn btn-success custom-width">Editar</button>
-        <button type="button" ng-click="ctrl.remove(u.id)" class="btn btn-danger custom-width">Eliminar</button>
-      </td>
+      <td><span ng-bind="u.total"></span></td>
     </tr>
     <tr>
       <td><span>SUBTOTAL DESCUENTOS CAJA: ${{ctrl.getTotal()}}</span></td>
