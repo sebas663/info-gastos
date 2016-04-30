@@ -1,65 +1,128 @@
 <div class="generic-container" ng-controller="AddBuyController as ctrl">
-  <div class="panel panel-default">
-    <div class="panel-heading"><span class="lead">Formulario de carga de compras</span></div>
-    <div class="formcontainer">
-      <form ng-submit="ctrl.submit()" name="myForm" class="form-horizontal">
-        <input type="hidden" ng-model="ctrl.buy.id" />
+  <div ng-cloak>
+    <md-content>
+      <md-tabs md-dynamic-height md-border-bottom>
+        <md-tab label="Compras">
+          <md-content class="md-padding">
+            <!--<h1 class="md-display-2">Compras</h1>-->
+            <div class="panel panel-default">
+              <div class="formcontainer">
+                <form ng-submit="ctrl.submitBuy()" name="buyForm" class="form-horizontal">
+                  <input type="hidden" ng-model="ctrl.buy.id" />
 
-        <div class="row">
-          <div class="form-group col-md-12">
-            <datepicker></datepicker>
-            <company-autocomplete></company-autocomplete>
-          </div>
-        </div>
-        <div class="row">
-          <div class="form-group col-md-12 ">
-            <product-autocomplete></product-autocomplete>
-          </div>
-        </div>
+                  <div class="row">
+                    <div class="form-group col-md-12">
+                      <datepicker></datepicker>
+                      <company-autocomplete></company-autocomplete>
+                    </div>
+                  </div>
 
-         <div class="row">
-           <div class="form-group col-md-12">
-             <product-code-ext></product-code-ext>
-             <quantity></quantity>
-             <price></price>
-           </div>
-         </div>
+                  <div class="row">
+                    <div class="form-group col-md-12 ">
+                      <product-autocomplete></product-autocomplete>
+                    </div>
+                  </div>
 
-         <div class="row">
-           <div class="form-actions floatRight">
-             <input type="submit"  value="{{!ctrl.buy.id ? 'Agregar' : 'Update'}}" class="btn btn-primary btn-sm" ng-disabled="myForm.$invalid">
-             <button type="button" ng-click="ctrl.reset()" class="btn btn-warning btn-sm" ng-disabled="myForm.$pristine">Limpiar campos</button>
-           </div>
-         </div>
-       </form>
-     </div>
-   </div>
+                  <div class="row">
+                    <div class="form-group col-md-12">
+                      <product-code-ext></product-code-ext>
+                      <quantity></quantity>
+                      <price></price>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="form-actions floatRight">
+                      <input type="submit"  value="{{!ctrl.buy.id ? 'Agregar' : 'Update'}}" class="btn btn-primary btn-sm" ng-disabled="buyForm.$invalid">
+                      <button type="button" ng-click="ctrl.resetBuyForm()" class="btn btn-warning btn-sm" ng-disabled="buyForm.$pristine">Limpiar campos</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </md-content>
+        </md-tab>
+        <md-tab label="Descuentos de caja">
+          <md-content class="md-padding">
+            <!--<h1 class="md-display-2">Descuentos de caja</h1>-->
+            <div class="panel panel-default">
+              <div class="formcontainer">
+                <form ng-submit="ctrl.submitDiscBox()" name="discBoxForm" class="form-horizontal">
+                  <input type="hidden" ng-model="ctrl.buy.id" />
+
+                  <div class="row">
+                    <div class="form-group col-md-12 ">
+                      <product-autocomplete></product-autocomplete>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="form-group col-md-12">
+                      <quantity></quantity>
+                      <price></price>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="form-actions floatRight">
+                      <input type="submit"  value="{{!ctrl.buy.id ? 'Agregar' : 'Update'}}" class="btn btn-primary btn-sm" ng-disabled="discBoxForm.$invalid">
+                      <button type="button" ng-click="ctrl.resetDiscBox()" class="btn btn-warning btn-sm" ng-disabled="discBoxForm.$pristine">Limpiar campos</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+          </md-content>
+        </md-tab>
+        <md-tab label="Descuentos en resumen">
+          <md-content class="md-padding">
+            <!--<h1 class="md-display-2">Descuentos en resumen</h1>-->
+            <div class="panel panel-default">
+              <div class="formcontainer">
+                <form ng-submit="ctrl.submitDiscCreditCard()" name="creditCardForm" class="form-horizontal">
+                  <input type="hidden" ng-model="ctrl.buy.id" />
+
+
+                  <div class="row">
+                    <div class="form-group col-md-12 ">
+                      <product-autocomplete></product-autocomplete>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="form-group col-md-12">
+                      <quantity></quantity>
+                      <price></price>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="form-actions floatRight">
+                      <input type="submit"  value="{{!ctrl.buy.id ? 'Agregar' : 'Update'}}" class="btn btn-primary btn-sm" ng-disabled="creditCardForm.$invalid">
+                      <button type="button" ng-click="ctrl.resetCreditCard()" class="btn btn-warning btn-sm" ng-disabled="creditCardForm.$pristine">Limpiar campos</button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+          </md-content>
+        </md-tab>
+      </md-tabs>
+    </md-content>
+  </div>
+
   <div class="panel panel-default">
     <div class="container">
       <form ng-submit="ctrl.submitBuys()" name="myFormList" class="form-inline" role="form">
         <!-- Default panel contents -->
         <div class="panel-heading"><span class="lead">Lista de Compras </span></div>
-
         <buys-grid></buys-grid>
-
         <div class="panel-heading"><span class="lead">Descuentos de caja </span></div>
-        <box-discount-grid></box-discount-grid>
-        <div>
-          <fieldset class="standard" >
-            <div layout="row" layout-wrap flex>
-              <!--<div flex="50" ng-repeat="item in items">-->
-              <!-- <md-checkbox ng-checked="exists(item, selected)" ng-click="toggle(item, selected)">
-                 {{ item }} <span ng-if="exists(item, selected)">selected</span>
-               </md-checkbox>-->
-              <md-checkbox>
-                <span>Tiene descuento en resumen?</span>
-              </md-checkbox>
-              <!--</div>-->
-            </div>
-          </fieldset>
-        </div>
-
-
+        <discount-box-grid></discount-box-grid>
+        <div class="panel-heading"><span class="lead">Descuentos en resumen </span></div>
+        <discount-credit-card-grid></discount-credit-card-grid>
         <div class="row">
           <div class="form-actions floatRight">
             <input type="submit"  value="Guardar" class="btn btn-primary btn-sm" ng-disabled="myFormList.$invalid">

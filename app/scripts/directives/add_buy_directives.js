@@ -36,8 +36,13 @@ App.directive('buysGrid', function() {
     templateUrl: 'views/directives-templates/buysGrid.html'
   };
 });
-App.directive('boxDiscountGrid', function() {
+App.directive('discountBoxGrid', function() {
   return {
-    templateUrl: 'views/directives-templates/boxDiscountGrid.html'
+    templateUrl: '../../views/directives-templates/discountBoxGrid.html'
+  };
+});
+App.directive('discountCreditCardGrid', function() {
+  return {
+    templateUrl: '../../views/directives-templates/discountCreditCardGrid.html'
   };
 });

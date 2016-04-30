@@ -36,7 +36,7 @@ function AddBuyController ($scope,AddBuyService){
                   );
           };
 
-         self.updateBuy = function(buy, id){
+          self.updateBuy = function(buy, id){
               AddBuyService.updateBuy(buy, id)
 		              .then(
 				              self.fetchAll,
@@ -46,7 +46,7 @@ function AddBuyController ($scope,AddBuyService){
                   );
           };
 
-         self.deleteBuy = function(id){
+          self.deleteBuy = function(id){
               AddBuyService.deleteBuy(id)
 		              .then(
 				              self.fetchAll,
@@ -56,7 +56,7 @@ function AddBuyController ($scope,AddBuyService){
                   );
           };
 
-         self.saveBuys = function(buys){
+          self.saveBuys = function(buys){
             AddBuyService.saveBuys(buys)
               .then(
                 self.fetchAll,
@@ -64,20 +64,20 @@ function AddBuyController ($scope,AddBuyService){
                   console.error('Error while save Buys.');
                 }
               );
-         };
+          };
 
-         self.fetchAll();
+          self.fetchAll();
 
-         self.getTotal = function(){
+          self.getTotal = function(){
             var total = 0;
             for(var i = 0; i < self.buys.length; i++){
               var buy = self.buys[i];
               total += buy.total;
             }
             return total;
-         }
+          }
 
-          self.submit = function() {
+          self.submitBuy = function() {
               if(self.buy.id==null){
      //             console.log('Saving New buy', self.buy);
                   self.createBuy(self.buy);
@@ -86,6 +86,26 @@ function AddBuyController ($scope,AddBuyService){
 //                  console.log('User updated with id ', self.user.id);
               }
               self.reset();
+          };
+          self.submitDiscBox = function() {
+            if(self.buy.id==null){
+              //             console.log('Saving New buy', self.buy);
+              self.createBuy(self.buy);
+            }else{
+              self.updateBuy(self.buy, self.buy.id);
+        //                  console.log('User updated with id ', self.user.id);
+            }
+            self.reset();
+          };
+          self.submitDiscCreditCard = function() {
+            if(self.buy.id==null){
+              //             console.log('Saving New buy', self.buy);
+              self.createBuy(self.buy);
+            }else{
+              self.updateBuy(self.buy, self.buy.id);
+        //                  console.log('User updated with id ', self.user.id);
+            }
+            self.reset();
           };
           self.submitBuys = function() {
             if( self.buys.length > 0 ){
