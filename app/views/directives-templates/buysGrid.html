@@ -35,7 +35,7 @@
 <!--            <td><span ng-bind="u.id"></span></td>
       <td><span ng-bind="u.buyDate| date: 'dd-MM-yyyy'"></span></td>
       <td><span ng-bind="ctrl.getCompanyById(u.companyID).description"></span></td>-->
-      <td><span ng-bind="ctrl.getProductById(u.productID).description"></span></td>
+      <td><span ng-bind="ctrl.getObjectById(u.productID,ctrl.products).description"></span></td>
       <td><span ng-bind="u.external_code"></span></td>
       <td><span ng-bind="u.quantity"></span></td>
       <td><span ng-bind="u.price"></span></td>

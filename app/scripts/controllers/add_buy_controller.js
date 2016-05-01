@@ -3,12 +3,22 @@
 App.controller('AddBuyController', AddBuyController);
 App.controller('CompanyCtrl', CompanyCtrl);
 App.controller('ProductCtrl', ProductCtrl);
+App.controller('BoxDiscountCtrl', BoxDiscountCtrl);
+App.controller('CreditCardDiscountCtrl', CreditCardDiscountCtrl);
+
 
 function AddBuyController ($scope,AddBuyService){
 
 		  var self = this;
-          self.buy={id:null,companyID:null,productID:null,external_code:'',quantity:null,price:null,buyDate:null,total:null};
+          var oriBuy = {id:null,companyID:null,productID:null,external_code:'',quantity:null,price:null,buyDate:null,total:null};
+          var oriBoxDiscount = {id:null,boxDiscountID:null,quantity:null,amount:null};
+          var oriCreditCardDiscount = {id:null,creditCardDiscountID:null,amount:null,base:null};
+          self.buy = angular.copy(oriBuy);
+          self.boxDiscount = angular.copy(oriBoxDiscount);
+          self.creditCardDiscount = angular.copy(oriCreditCardDiscount);
           self.buys=[];
+          self.boxDiscounts=[];
+          self.creditCardDiscounts=[];
           self.companies=[];
           self.products=[];
           self.buy.buyDate = new Date();
@@ -139,39 +149,41 @@ function AddBuyController ($scope,AddBuyService){
               self.deleteBuy(id);
           };
 
-          self.reset = function(){
-        	  self.buy={id:null,companyID:null,productID:null,external_code:'',quantity:null,price:null,buyDate:null,total:null};
-            $scope.myForm.$setPristine(); //reset Form
-            self.buy.buyDate = new Date();
-            $scope.$broadcast('onSubmit', {resetAutocomplete:true});
-          };
-
-
-          $scope.populateCompanies= function(array){
-            self.companies = array;
-          }
-          $scope.populateProducts = function(array){
-            self.products = array;
-          }
-          self.getCompanyById = function(id){
-            var company = null;
-            for(var i = 0; i < self.companies.length; i++){
-              if(self.companies[i].id == id) {
-                company = self.companies[i];
-              }
+          self.reset = function(type){
+            if(type == 'buyForm'){
+              $scope.buyForm.$setPristine(); //reset Form
+              self.buy = angular.copy(oriBuy);
+              self.buy.buyDate = new Date();
+              $scope.$broadcast('onSubmitBuy', {resetAutocomplete:true});
             }
-            return company;
+            else if (type == 'creditCardForm'){
+              $scope.creditCardForm.$setPristine(); //reset Form
+              self.creditCardDiscount = angular.copy(oriCreditCardDiscount);
+              $scope.$broadcast('onSubmitCreditCard', {resetAutocomplete:true});
+            }
+            else if (type == 'discBoxForm'){
+              $scope.discBoxForm.$setPristine(); //reset Form
+              self.boxDiscount = angular.copy(oriBoxDiscount);
+              $scope.$broadcast('onSubmitBox', {resetAutocomplete:true});
+            }
+
           };
 
-          self.getProductById = function(id){
-            var product = null;
-            for(var i = 0; i < self.products.length; i++){
-              if(self.products[i].id == id) {
-                product = self.products[i];
-              }
+          $scope.populateArray = function(array,type){
+            if(type == 'company'){
+              self.companies = array;
             }
-            return product;
-          };
+            else if (type == 'product'){
+              self.products = array;
+            }
+            else if (type == 'boxDiscount'){
+              self.boxDiscounts = array;
+            }
+            else if (type == 'creditCardDiscount'){
+              self.creditCardDiscounts = array;
+            }
+          }
+
           self.getObjectById = function(id,array){
             var obj = null;
             for(var i = 0; i < array.length; i++){
@@ -213,7 +225,7 @@ function CompanyCtrl ($scope, CompanyService, $timeout, $q, $log, $filter,$mdDia
       CompanyService.fetchAll()
         .then(
           function(d) {
-            $scope.populateCompanies(d);
+            $scope.populateArray(d,'company');
           },
           function(errResponse){
             console.error(errResponse);
@@ -254,7 +266,7 @@ function CompanyCtrl ($scope, CompanyService, $timeout, $q, $log, $filter,$mdDia
       };
 
     }
-    $scope.$on('onSubmit', function(event, obj) {
+    $scope.$on('onSubmitBuy', function(event, obj) {
       if(obj.resetAutocomplete){
         clear();
       }
@@ -341,7 +353,7 @@ function ProductCtrl ($scope, ProductService, $timeout, $q, $log, $filter,$mdDia
       ProductService.fetchAll()
         .then(
           function(d) {
-            $scope.populateProducts(d);
+            $scope.populateArray(d,'product');
           },
           function(errResponse){
             console.error(errResponse);
@@ -387,7 +399,7 @@ function ProductCtrl ($scope, ProductService, $timeout, $q, $log, $filter,$mdDia
       };
 
     }
-    $scope.$on('onSubmit', function(event, obj) {
+    $scope.$on('onSubmitBuy', function(event, obj) {
       if(obj.resetAutocomplete){
         clear();
       }
@@ -441,3 +453,267 @@ function ProductCtrl ($scope, ProductService, $timeout, $q, $log, $filter,$mdDia
       });
     }
   }
+function BoxDiscountCtrl ($scope, ProductService, $timeout, $q, $log, $filter,$mdDialog) {
+  var self = this;
+  self.simulateQuery = false;
+  self.isDisabled    = false;
+  self.products        = [];
+  self.querySearch   = querySearch;
+  self.selectedItemChange = selectedItemChange;
+  $scope.product = {id:null,description:'',brand:'',code:'',type:'',subtype:'',size:'',packaging:''};
+  $scope.showDialog = showDialog;
+
+  // ******************************
+  // Internal methods
+  // ******************************
+  self.fetchAll = function(){
+    ProductService.fetchAll()
+      .then(
+        function(d) {
+          self.products = d;
+          // $log.info('fetchAll product' );
+        },
+        function(errResponse){
+          console.error(errResponse);
+        }
+      );
+  };
+  /**
+   *
+   */
+  self.fetchAllPopulate = function(){
+    ProductService.fetchAll()
+      .then(
+        function(d) {
+          $scope.populateArray(d,'boxDiscount');
+        },
+        function(errResponse){
+          console.error(errResponse);
+        }
+      );
+  };
+  self.fetchAll();
+  self.fetchAllPopulate();
+  /**
+   * Search for states... use $timeout to simulate
+   * remote dataservice call.
+   */
+  function querySearch (query) {
+    //$log.info('querySearch product' );
+    var results = query ? self.products.filter( createFilterFor(query) ) : self.products,
+      deferred;
+    if (self.simulateQuery) {
+      deferred = $q.defer();
+      $timeout(function () { deferred.resolve( results ); }, Math.random() * 1000, false);
+      return deferred.promise;
+    } else {
+      return results;
+    }
+  }
+
+  function selectedItemChange(item) {
+    //$log.info('selectedItemChange product ' );
+    if (item && item.id) {
+      $scope.ctrl.buy.productID = item.id;
+      // $log.info('Id ' + $scope.ctrl.buy.productID);
+    }
+  }
+
+  /**
+   * Create filter function for a query string
+   */
+  function createFilterFor(query) {
+    $log.info('createFilterFor product' );
+    var lowercaseQuery = angular.lowercase(query);
+
+    return function filterFn(product) {
+      return (product.id.indexOf(lowercaseQuery) === 0);
+    };
+
+  }
+  $scope.$on('onSubmitBox', function(event, obj) {
+    if(obj.resetAutocomplete){
+      clear();
+    }
+  })
+  $scope.$on('onEdit', function(event, obj) {
+    if(obj.buy){
+      setDefaults(obj.buy.productID)
+    }
+  })
+  function clear() {
+    self.selectedItem = null;
+    self.searchText = "";
+  }
+  function setDefaults(objectID) {
+    var result = $filter('filter')(self.products, {id: objectID})[0];
+    if (result) {
+      self.selectedItem = result.description;
+      self.searchText = result.description;
+    }
+  }
+  function showDialog($event) {
+    var parentEl = angular.element(document.body);
+    $mdDialog.show({
+      targetEvent: $event,
+      parent: parentEl,
+      scope:$scope,         // use parent scope in template
+      preserveScope: true,
+      templateUrl:'views/directives-templates/formNewProduct.html',
+      controller:function($scope, $mdDialog) {
+        $scope.closeDialog = function() {
+          $mdDialog.hide();
+        }
+        $scope.create = function(product){
+          ProductService.create(product)
+            .then(
+              function(d) {
+                self.fetchAll();
+              },
+              function(errResponse){
+                console.error(errResponse);
+              }
+            );
+        };
+        $scope.submit = function() {
+          if($scope.product.id==null){
+            $scope.create($scope.product);
+          }
+          $mdDialog.hide();
+        };
+      }
+    });
+  }
+}
+function CreditCardDiscountCtrl ($scope, ProductService, $timeout, $q, $log, $filter,$mdDialog) {
+  var self = this;
+  self.simulateQuery = false;
+  self.isDisabled    = false;
+  self.products        = [];
+  self.querySearch   = querySearch;
+  self.selectedItemChange = selectedItemChange;
+  $scope.product = {id:null,description:'',brand:'',code:'',type:'',subtype:'',size:'',packaging:''};
+  $scope.showDialog = showDialog;
+
+  // ******************************
+  // Internal methods
+  // ******************************
+  self.fetchAll = function(){
+    ProductService.fetchAll()
+      .then(
+        function(d) {
+          self.products = d;
+          // $log.info('fetchAll product' );
+        },
+        function(errResponse){
+          console.error(errResponse);
+        }
+      );
+  };
+  /**
+   *
+   */
+  self.fetchAllPopulate = function(){
+    ProductService.fetchAll()
+      .then(
+        function(d) {
+          $scope.populateArray(d,'creditCardDiscount');
+        },
+        function(errResponse){
+          console.error(errResponse);
+        }
+      );
+  };
+  self.fetchAll();
+  self.fetchAllPopulate();
+  /**
+   * Search for states... use $timeout to simulate
+   * remote dataservice call.
+   */
+  function querySearch (query) {
+    //$log.info('querySearch product' );
+    var results = query ? self.products.filter( createFilterFor(query) ) : self.products,
+      deferred;
+    if (self.simulateQuery) {
+      deferred = $q.defer();
+      $timeout(function () { deferred.resolve( results ); }, Math.random() * 1000, false);
+      return deferred.promise;
+    } else {
+      return results;
+    }
+  }
+
+  function selectedItemChange(item) {
+    //$log.info('selectedItemChange product ' );
+    if (item && item.id) {
+      $scope.ctrl.buy.productID = item.id;
+      // $log.info('Id ' + $scope.ctrl.buy.productID);
+    }
+  }
+
+  /**
+   * Create filter function for a query string
+   */
+  function createFilterFor(query) {
+    $log.info('createFilterFor product' );
+    var lowercaseQuery = angular.lowercase(query);
+
+    return function filterFn(product) {
+      return (product.id.indexOf(lowercaseQuery) === 0);
+    };
+
+  }
+  $scope.$on('onSubmitCreditCard', function(event, obj) {
+    if(obj.resetAutocomplete){
+      clear();
+    }
+  })
+  $scope.$on('onEdit', function(event, obj) {
+    if(obj.buy){
+      setDefaults(obj.buy.productID)
+    }
+  })
+  function clear() {
+    self.selectedItem = null;
+    self.searchText = "";
+  }
+  function setDefaults(objectID) {
+    var result = $filter('filter')(self.products, {id: objectID})[0];
+    if (result) {
+      self.selectedItem = result.description;
+      self.searchText = result.description;
+    }
+  }
+  function showDialog($event) {
+    var parentEl = angular.element(document.body);
+    $mdDialog.show({
+      targetEvent: $event,
+      parent: parentEl,
+      scope:$scope,         // use parent scope in template
+      preserveScope: true,
+      templateUrl:'views/directives-templates/formNewProduct.html',
+      controller:function($scope, $mdDialog) {
+        $scope.closeDialog = function() {
+          $mdDialog.hide();
+        }
+        $scope.create = function(product){
+          ProductService.create(product)
+            .then(
+              function(d) {
+                self.fetchAll();
+              },
+              function(errResponse){
+                console.error(errResponse);
+              }
+            );
+        };
+        $scope.submit = function() {
+          if($scope.product.id==null){
+            $scope.create($scope.product);
+          }
+          $mdDialog.hide();
+        };
+      }
+    });
+  }
+}

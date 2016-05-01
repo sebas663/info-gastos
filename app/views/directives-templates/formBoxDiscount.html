@@ -1,0 +1,50 @@
+<div class="panel panel-default">
+  <div class="formcontainer">
+    <form ng-submit="ctrl.submitDiscBox()" name="discBoxForm" class="form-horizontal">
+      <input type="hidden" ng-model="ctrl.boxDiscount.id" />
+
+      <div class="row">
+        <div class="form-group col-md-12 ">
+          <discount-autocomplete></discount-autocomplete>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group col-md-12">
+
+          <div class="col-md-4" >
+            <div layout="row" ng-cloak="" >
+              <div flex="80">
+                <md-content class="md-padding">
+                  <!--<md-input-container class="md-input-custom">-->
+                  <input flex ng-model="ctrl.boxDiscount.quantity" placeholder="Cantidad">
+                  <!--  </md-input-container>-->
+                </md-content>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4" >
+            <div layout="row" ng-cloak="" >
+              <div flex="80">
+                <md-content class="md-padding">
+                  <!--<md-input-container class="md-input-custom">-->
+                  <input flex ng-model="ctrl.boxDiscount.amount" placeholder="Monto">
+                  <!--  </md-input-container>-->
+                </md-content>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="form-actions floatRight">
+          <input type="submit"  value="{{!ctrl.buy.id ? 'Agregar' : 'Update'}}" class="btn btn-primary btn-sm" ng-disabled="discBoxForm.$invalid">
+          <button type="button" ng-click="ctrl.reset('discBoxForm')" class="btn btn-warning btn-sm" ng-disabled="discBoxForm.$pristine">Limpiar campos</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
