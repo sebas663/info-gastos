@@ -7,7 +7,7 @@ App.controller('BoxDiscountCtrl', BoxDiscountCtrl);
 App.controller('CreditCardDiscountCtrl', CreditCardDiscountCtrl);
 
 
-function AddBuyController ($scope,AddBuyService){
+function AddBuyController ($scope,AddBuyService,AutocompleteService, $filter){
 
 		  var self = this;
           var oriBuy = {id:null,companyID:null,productID:null,external_code:'',quantity:null,price:null,buyDate:null,total:null};
@@ -23,6 +23,9 @@ function AddBuyController ($scope,AddBuyService){
           self.products=[];
           self.buy.buyDate = new Date();
           self.resetAutocomplete = false;
+          self.querySearch  = AutocompleteService.querySearch;
+          self.getObjectById  = AutocompleteService.getObjectById;
+
           self.fetchAll = function(){
              AddBuyService.fetchAll()
                  .then(
@@ -95,7 +98,7 @@ function AddBuyController ($scope,AddBuyService){
                   self.updateBuy(self.buy, self.buy.id);
 //                  console.log('User updated with id ', self.user.id);
               }
-              self.reset();
+            self.reset('buyForm');
           };
           self.submitDiscBox = function() {
             if(self.buy.id==null){
@@ -122,7 +125,6 @@ function AddBuyController ($scope,AddBuyService){
               //             console.log('Saving New buy', self.buy);
               self.saveBuys(self.buys);
             }else{
-
 //                  console.log('User updated with id ', self.user.id);
             }
             self.reset();
@@ -133,9 +135,7 @@ function AddBuyController ($scope,AddBuyService){
 //              console.log('id to be edited', id);
               for(var i = 0; i < self.buys.length; i++){
                   if(self.buys[i].id == id) {
-                     self.buy = angular.copy(self.buys[i]);
-                     self.buy.buyDate = new Date(self.buy.buyDate);
-                     $scope.$broadcast('onEdit', {buy:self.buy});
+                     setBuyDefaults(self.buys[i]);
                      break;
                   }
               }
@@ -154,17 +154,20 @@ function AddBuyController ($scope,AddBuyService){
               $scope.buyForm.$setPristine(); //reset Form
               self.buy = angular.copy(oriBuy);
               self.buy.buyDate = new Date();
-              $scope.$broadcast('onSubmitBuy', {resetAutocomplete:true});
+              self.selectedCompany = null;
+              self.searchTxtCompany = "";
+              self.selectedProduct = null;
+              self.searchTxtProduct = "";
             }
             else if (type == 'creditCardForm'){
               $scope.creditCardForm.$setPristine(); //reset Form
               self.creditCardDiscount = angular.copy(oriCreditCardDiscount);
-              $scope.$broadcast('onSubmitCreditCard', {resetAutocomplete:true});
+
             }
             else if (type == 'discBoxForm'){
               $scope.discBoxForm.$setPristine(); //reset Form
               self.boxDiscount = angular.copy(oriBoxDiscount);
-              $scope.$broadcast('onSubmitBox', {resetAutocomplete:true});
+
             }
 
           };
@@ -183,48 +186,44 @@ function AddBuyController ($scope,AddBuyService){
               self.creditCardDiscounts = array;
             }
           }
-
-          self.getObjectById = function(id,array){
-            var obj = null;
-            for(var i = 0; i < array.length; i++){
-              if(array[i].id == id) {
-                obj = array[i];
-              }
+  
+          self.selectedCompanyChange = function (item) {
+            if (item && item.id) {
+              self.buy.companyID = item.id;
             }
-            return obj;
-          };
-//      }]);
+          }
+          self.selectedProductChange = function (item) {
+            if (item && item.id) {
+              self.buy.companyID = item.id;
+            }
+          }
+          function setBuyDefaults(object) {
+            self.buy = angular.copy(object);
+            self.buy.buyDate = new Date(self.buy.buyDate);
+            var result =  self.getObjectById(self.buy.companyID,self.companies);
+            var result2 = self.getObjectById(self.buy.productID,self.products);
+            if (result) {
+              self.selectedCompany = result.description;
+              self.searchTxtCompany = result.description;
+            }
+            if (result2) {
+              self.selectedProduct = result2.description;
+              self.searchTxtProduct = result2.description;
+            }
+          }
 }
 
-function CompanyCtrl ($scope, CompanyService, $timeout, $q, $log, $filter,$mdDialog) {
+function CompanyCtrl ($scope, CompanyService,$mdDialog) {
     var self = this;
-    self.simulateQuery = false;
-    self.isDisabled    = false;
     self.companies = [];
-    self.querySearch   = querySearch;
-    self.selectedItemChange = selectedItemChange;
     $scope.company = {id:null,description:'',entry:'',code:'',subsidiary:'',address:''};
     $scope.showDialog = showDialog;
 
-    // ******************************
-    // Internal methods
-    // ******************************
     self.fetchAll = function(){
       CompanyService.fetchAll()
         .then(
           function(d) {
             self.companies = d;
-           // $log.info('fetchAll company' );
-          },
-          function(errResponse){
-            console.error(errResponse);
-          }
-        );
-    };
-    self.fetchAllPopulate = function(){
-      CompanyService.fetchAll()
-        .then(
-          function(d) {
             $scope.populateArray(d,'company');
           },
           function(errResponse){
@@ -232,61 +231,8 @@ function CompanyCtrl ($scope, CompanyService, $timeout, $q, $log, $filter,$mdDia
           }
         );
     };
-    self.companies = self.fetchAll();
-    self.fetchAllPopulate();
-    /**
-     * Search for states... use $timeout to simulate
-     * remote dataservice call.
-     */
-    function querySearch (query) {
-      var results = query ? self.companies.filter( createFilterFor(query) ) : self.companies,
-          deferred;
-      if (self.simulateQuery) {
-        deferred = $q.defer();
-        $timeout(function () { deferred.resolve( results ); }, Math.random() * 1000, false);
-        return deferred.promise;
-      } else {
-        return results;
-      }
-    }
 
-    function selectedItemChange(item) {
-      if (item && item.id) {
-         $scope.ctrl.buy.companyID = item.id;
-      }
-    }
-
-    /**
-     * Create filter function for a query string
-     */
-    function createFilterFor(query) {
-      var lowercaseQuery = angular.lowercase(query);
-      return function filterFn(company) {
-        return (company.id.indexOf(lowercaseQuery) === 0);
-      };
-
-    }
-    $scope.$on('onSubmitBuy', function(event, obj) {
-      if(obj.resetAutocomplete){
-        clear();
-      }
-    })
-    $scope.$on('onEdit', function(event, obj) {
-      if(obj.buy){
-        setDefaults(obj.buy.companyID);
-      }
-    })
-    function clear() {
-      self.selectedItem = null;
-      self.searchText = "";
-    }
-    function setDefaults(objectID) {
-        var result = $filter('filter')(self.companies, {id: objectID})[0];
-        if (result) {
-          self.selectedItem = result.description;
-          self.searchText = result.description;
-        }
-    }
+    self.fetchAll();
 
     function showDialog($event) {
       var parentEl = angular.element(document.body);
@@ -321,38 +267,17 @@ function CompanyCtrl ($scope, CompanyService, $timeout, $q, $log, $filter,$mdDia
       });
     }
   }
-function ProductCtrl ($scope, ProductService, $timeout, $q, $log, $filter,$mdDialog) {
+function ProductCtrl ($scope, ProductService,$mdDialog) {
     var self = this;
-    self.simulateQuery = false;
-    self.isDisabled    = false;
     self.products        = [];
-    self.querySearch   = querySearch;
-    self.selectedItemChange = selectedItemChange;
     $scope.product = {id:null,description:'',brand:'',code:'',type:'',subtype:'',size:'',packaging:''};
     $scope.showDialog = showDialog;
 
-    // ******************************
-    // Internal methods
-    // ******************************
     self.fetchAll = function(){
       ProductService.fetchAll()
         .then(
           function(d) {
             self.products = d;
-           // $log.info('fetchAll product' );
-          },
-          function(errResponse){
-            console.error(errResponse);
-          }
-        );
-    };
-    /**
-     *
-     */
-    self.fetchAllPopulate = function(){
-      ProductService.fetchAll()
-        .then(
-          function(d) {
             $scope.populateArray(d,'product');
           },
           function(errResponse){
@@ -360,66 +285,9 @@ function ProductCtrl ($scope, ProductService, $timeout, $q, $log, $filter,$mdDia
           }
         );
     };
+
     self.fetchAll();
-    self.fetchAllPopulate();
-    /**
-     * Search for states... use $timeout to simulate
-     * remote dataservice call.
-     */
-    function querySearch (query) {
-      //$log.info('querySearch product' );
-      var results = query ? self.products.filter( createFilterFor(query) ) : self.products,
-          deferred;
-      if (self.simulateQuery) {
-        deferred = $q.defer();
-        $timeout(function () { deferred.resolve( results ); }, Math.random() * 1000, false);
-        return deferred.promise;
-      } else {
-        return results;
-      }
-    }
 
-    function selectedItemChange(item) {
-      //$log.info('selectedItemChange product ' );
-      if (item && item.id) {
-         $scope.ctrl.buy.productID = item.id;
-       // $log.info('Id ' + $scope.ctrl.buy.productID);
-      }
-    }
-
-    /**
-     * Create filter function for a query string
-     */
-    function createFilterFor(query) {
-      $log.info('createFilterFor product' );
-      var lowercaseQuery = angular.lowercase(query);
-
-      return function filterFn(product) {
-        return (product.id.indexOf(lowercaseQuery) === 0);
-      };
-
-    }
-    $scope.$on('onSubmitBuy', function(event, obj) {
-      if(obj.resetAutocomplete){
-        clear();
-      }
-    })
-    $scope.$on('onEdit', function(event, obj) {
-      if(obj.buy){
-        setDefaults(obj.buy.productID)
-      }
-    })
-    function clear() {
-      self.selectedItem = null;
-      self.searchText = "";
-    }
-    function setDefaults(objectID) {
-        var result = $filter('filter')(self.products, {id: objectID})[0];
-        if (result) {
-          self.selectedItem = result.description;
-          self.searchText = result.description;
-        }
-    }
     function showDialog($event) {
       var parentEl = angular.element(document.body);
       $mdDialog.show({
@@ -453,38 +321,17 @@ function ProductCtrl ($scope, ProductService, $timeout, $q, $log, $filter,$mdDia
       });
     }
   }
-function BoxDiscountCtrl ($scope, ProductService, $timeout, $q, $log, $filter,$mdDialog) {
+function BoxDiscountCtrl ($scope, ProductService,$mdDialog) {
   var self = this;
-  self.simulateQuery = false;
-  self.isDisabled    = false;
-  self.products        = [];
-  self.querySearch   = querySearch;
-  self.selectedItemChange = selectedItemChange;
-  $scope.product = {id:null,description:'',brand:'',code:'',type:'',subtype:'',size:'',packaging:''};
+  self.boxDiscounts        = [];
+  $scope.boxDiscount = {id:null,description:'',brand:'',code:'',type:'',subtype:'',size:'',packaging:''};
   $scope.showDialog = showDialog;
 
-  // ******************************
-  // Internal methods
-  // ******************************
   self.fetchAll = function(){
     ProductService.fetchAll()
       .then(
         function(d) {
-          self.products = d;
-          // $log.info('fetchAll product' );
-        },
-        function(errResponse){
-          console.error(errResponse);
-        }
-      );
-  };
-  /**
-   *
-   */
-  self.fetchAllPopulate = function(){
-    ProductService.fetchAll()
-      .then(
-        function(d) {
+          self.boxDiscounts = d;
           $scope.populateArray(d,'boxDiscount');
         },
         function(errResponse){
@@ -492,66 +339,9 @@ function BoxDiscountCtrl ($scope, ProductService, $timeout, $q, $log, $filter,$m
         }
       );
   };
+
   self.fetchAll();
-  self.fetchAllPopulate();
-  /**
-   * Search for states... use $timeout to simulate
-   * remote dataservice call.
-   */
-  function querySearch (query) {
-    //$log.info('querySearch product' );
-    var results = query ? self.products.filter( createFilterFor(query) ) : self.products,
-      deferred;
-    if (self.simulateQuery) {
-      deferred = $q.defer();
-      $timeout(function () { deferred.resolve( results ); }, Math.random() * 1000, false);
-      return deferred.promise;
-    } else {
-      return results;
-    }
-  }
 
-  function selectedItemChange(item) {
-    //$log.info('selectedItemChange product ' );
-    if (item && item.id) {
-      $scope.ctrl.buy.productID = item.id;
-      // $log.info('Id ' + $scope.ctrl.buy.productID);
-    }
-  }
-
-  /**
-   * Create filter function for a query string
-   */
-  function createFilterFor(query) {
-    $log.info('createFilterFor product' );
-    var lowercaseQuery = angular.lowercase(query);
-
-    return function filterFn(product) {
-      return (product.id.indexOf(lowercaseQuery) === 0);
-    };
-
-  }
-  $scope.$on('onSubmitBox', function(event, obj) {
-    if(obj.resetAutocomplete){
-      clear();
-    }
-  })
-  $scope.$on('onEdit', function(event, obj) {
-    if(obj.buy){
-      setDefaults(obj.buy.productID)
-    }
-  })
-  function clear() {
-    self.selectedItem = null;
-    self.searchText = "";
-  }
-  function setDefaults(objectID) {
-    var result = $filter('filter')(self.products, {id: objectID})[0];
-    if (result) {
-      self.selectedItem = result.description;
-      self.searchText = result.description;
-    }
-  }
   function showDialog($event) {
     var parentEl = angular.element(document.body);
     $mdDialog.show({
@@ -559,13 +349,13 @@ function BoxDiscountCtrl ($scope, ProductService, $timeout, $q, $log, $filter,$m
       parent: parentEl,
       scope:$scope,         // use parent scope in template
       preserveScope: true,
-      templateUrl:'views/directives-templates/formNewProduct.html',
+      templateUrl:'views/directives-templates/formNewBoxDiscount.html',
       controller:function($scope, $mdDialog) {
         $scope.closeDialog = function() {
           $mdDialog.hide();
         }
-        $scope.create = function(product){
-          ProductService.create(product)
+        $scope.create = function(boxDiscount){
+          ProductService.create(boxDiscount)
             .then(
               function(d) {
                 self.fetchAll();
@@ -576,8 +366,8 @@ function BoxDiscountCtrl ($scope, ProductService, $timeout, $q, $log, $filter,$m
             );
         };
         $scope.submit = function() {
-          if($scope.product.id==null){
-            $scope.create($scope.product);
+          if($scope.boxDiscount.id==null){
+            $scope.create($scope.boxDiscount);
           }
           $mdDialog.hide();
         };
@@ -585,38 +375,17 @@ function BoxDiscountCtrl ($scope, ProductService, $timeout, $q, $log, $filter,$m
     });
   }
 }
-function CreditCardDiscountCtrl ($scope, ProductService, $timeout, $q, $log, $filter,$mdDialog) {
+function CreditCardDiscountCtrl ($scope, ProductService, $mdDialog) {
   var self = this;
-  self.simulateQuery = false;
-  self.isDisabled    = false;
   self.products        = [];
-  self.querySearch   = querySearch;
-  self.selectedItemChange = selectedItemChange;
   $scope.product = {id:null,description:'',brand:'',code:'',type:'',subtype:'',size:'',packaging:''};
   $scope.showDialog = showDialog;
 
-  // ******************************
-  // Internal methods
-  // ******************************
   self.fetchAll = function(){
     ProductService.fetchAll()
       .then(
         function(d) {
           self.products = d;
-          // $log.info('fetchAll product' );
-        },
-        function(errResponse){
-          console.error(errResponse);
-        }
-      );
-  };
-  /**
-   *
-   */
-  self.fetchAllPopulate = function(){
-    ProductService.fetchAll()
-      .then(
-        function(d) {
           $scope.populateArray(d,'creditCardDiscount');
         },
         function(errResponse){
@@ -624,66 +393,9 @@ function CreditCardDiscountCtrl ($scope, ProductService, $timeout, $q, $log, $fi
         }
       );
   };
+
   self.fetchAll();
-  self.fetchAllPopulate();
-  /**
-   * Search for states... use $timeout to simulate
-   * remote dataservice call.
-   */
-  function querySearch (query) {
-    //$log.info('querySearch product' );
-    var results = query ? self.products.filter( createFilterFor(query) ) : self.products,
-      deferred;
-    if (self.simulateQuery) {
-      deferred = $q.defer();
-      $timeout(function () { deferred.resolve( results ); }, Math.random() * 1000, false);
-      return deferred.promise;
-    } else {
-      return results;
-    }
-  }
 
-  function selectedItemChange(item) {
-    //$log.info('selectedItemChange product ' );
-    if (item && item.id) {
-      $scope.ctrl.buy.productID = item.id;
-      // $log.info('Id ' + $scope.ctrl.buy.productID);
-    }
-  }
-
-  /**
-   * Create filter function for a query string
-   */
-  function createFilterFor(query) {
-    $log.info('createFilterFor product' );
-    var lowercaseQuery = angular.lowercase(query);
-
-    return function filterFn(product) {
-      return (product.id.indexOf(lowercaseQuery) === 0);
-    };
-
-  }
-  $scope.$on('onSubmitCreditCard', function(event, obj) {
-    if(obj.resetAutocomplete){
-      clear();
-    }
-  })
-  $scope.$on('onEdit', function(event, obj) {
-    if(obj.buy){
-      setDefaults(obj.buy.productID)
-    }
-  })
-  function clear() {
-    self.selectedItem = null;
-    self.searchText = "";
-  }
-  function setDefaults(objectID) {
-    var result = $filter('filter')(self.products, {id: objectID})[0];
-    if (result) {
-      self.selectedItem = result.description;
-      self.searchText = result.description;
-    }
-  }
   function showDialog($event) {
     var parentEl = angular.element(document.body);
     $mdDialog.show({

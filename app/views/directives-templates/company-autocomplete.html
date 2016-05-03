@@ -2,12 +2,12 @@
 	<div layout="row" ng-cloak="" >
      <div flex="80">
         <md-content class="md-padding">
-          <md-autocomplete  md-selected-item="cpnyctrl.selectedItem"  md-search-text="cpnyctrl.searchText" md-selected-item-change="cpnyctrl.selectedItemChange(item)" md-items="item in cpnyctrl.querySearch(cpnyctrl.searchText)" md-item-text="item.description" md-min-length="0" placeholder="Empresa" md-min-length="0">
+          <md-autocomplete  md-selected-item="ctrl.selectedCompany"  md-search-text="ctrl.searchTxtCompany" md-selected-item-change="ctrl.selectedCompanyChange(item)" md-items="item in ctrl.querySearch(ctrl.searchTxtCompany,ctrl.companies)" md-item-text="item.description" md-min-length="0" placeholder="Empresa" md-min-length="0">
                    <md-item-template>
-                     <span md-highlight-text="cpnyctrl.searchText" md-highlight-flags="^i">{{item.description}}</span>
+                     <span md-highlight-text="ctrl.searchTxtCompany" md-highlight-flags="^i">{{item.description}}</span>
                    </md-item-template>
                  <md-not-found>
-                   No se encontro "{{cpnyctrl.searchText}}" pulse icono para agregar.
+                   No se encontro "{{ctrl.searchTxtCompany}}" pulse icono para agregar.
                  </md-not-found>
                  </md-autocomplete>
              </md-content>
