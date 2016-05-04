@@ -3,10 +3,8 @@
     <thead>
     <tr>
       <th>Descripcion</th>
-      <th>Pruducto</th>
       <th>Cantidad</th>
       <th>Monto</th>
-      <th>Subtotal</th>
     </tr>
     </thead>
     <tbody>
@@ -14,8 +12,6 @@
       <td><span ng-bind="ctrl.getProductById(u.productID).description"></span></td>
       <td><span ng-bind="u.quantity"></span></td>
       <td><span ng-bind="u.price"></span></td>
-      <td><span ng-bind="u.total"></span></td>
-      <td><span ng-bind="u.total"></span></td>
     </tr>
     <tr>
       <td><span>SUBTOTAL DESCUENTOS CAJA: ${{ctrl.getTotal()}}</span></td>

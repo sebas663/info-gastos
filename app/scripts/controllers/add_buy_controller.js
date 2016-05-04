@@ -186,7 +186,7 @@ function AddBuyController ($scope,AddBuyService,AutocompleteService, $filter){
               self.creditCardDiscounts = array;
             }
           }
-  
+
           self.selectedCompanyChange = function (item) {
             if (item && item.id) {
               self.buy.companyID = item.id;
@@ -321,14 +321,14 @@ function ProductCtrl ($scope, ProductService,$mdDialog) {
       });
     }
   }
-function BoxDiscountCtrl ($scope, ProductService,$mdDialog) {
+function BoxDiscountCtrl ($scope, BoxDiscountService,$mdDialog) {
   var self = this;
-  self.boxDiscounts        = [];
+  self.boxDiscounts  = [];
   $scope.boxDiscount = {id:null,description:'',brand:'',code:'',type:'',subtype:'',size:'',packaging:''};
-  $scope.showDialog = showDialog;
+  $scope.showDialog  = showDialog;
 
   self.fetchAll = function(){
-    ProductService.fetchAll()
+    BoxDiscountService.fetchAll()
       .then(
         function(d) {
           self.boxDiscounts = d;
@@ -354,8 +354,8 @@ function BoxDiscountCtrl ($scope, ProductService,$mdDialog) {
         $scope.closeDialog = function() {
           $mdDialog.hide();
         }
-        $scope.create = function(boxDiscount){
-          ProductService.create(boxDiscount)
+        $scope.create = function(obj){
+          BoxDiscountService.create(obj)
             .then(
               function(d) {
                 self.fetchAll();
@@ -375,17 +375,17 @@ function BoxDiscountCtrl ($scope, ProductService,$mdDialog) {
     });
   }
 }
-function CreditCardDiscountCtrl ($scope, ProductService, $mdDialog) {
+function CreditCardDiscountCtrl ($scope, CreditCardDiscountService, $mdDialog) {
   var self = this;
-  self.products        = [];
-  $scope.product = {id:null,description:'',brand:'',code:'',type:'',subtype:'',size:'',packaging:''};
+  self.creditCardDiscounts  = [];
+  $scope.creditCardDiscount = {id:null,description:'',brand:'',code:'',type:'',subtype:'',size:'',packaging:''};
   $scope.showDialog = showDialog;
 
   self.fetchAll = function(){
-    ProductService.fetchAll()
+    CreditCardDiscountService.fetchAll()
       .then(
         function(d) {
-          self.products = d;
+          self.creditCardDiscounts = d;
           $scope.populateArray(d,'creditCardDiscount');
         },
         function(errResponse){
@@ -403,13 +403,13 @@ function CreditCardDiscountCtrl ($scope, ProductService, $mdDialog) {
       parent: parentEl,
       scope:$scope,         // use parent scope in template
       preserveScope: true,
-      templateUrl:'views/directives-templates/formNewProduct.html',
+      templateUrl:'views/directives-templates/formNewCreditCardDiscount.html',
       controller:function($scope, $mdDialog) {
         $scope.closeDialog = function() {
           $mdDialog.hide();
         }
-        $scope.create = function(product){
-          ProductService.create(product)
+        $scope.create = function(obj){
+          CreditCardDiscountService.create(obj)
             .then(
               function(d) {
                 self.fetchAll();
@@ -420,8 +420,8 @@ function CreditCardDiscountCtrl ($scope, ProductService, $mdDialog) {
             );
         };
         $scope.submit = function() {
-          if($scope.product.id==null){
-            $scope.create($scope.product);
+          if($scope.creditCardDiscount.id==null){
+            $scope.create($scope.creditCardDiscount);
           }
           $mdDialog.hide();
         };
