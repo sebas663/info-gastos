@@ -4,7 +4,7 @@ App.factory('BoxDiscountService', ['$http', '$q', function($http, $q){
 	return {
 
 			fetchAll: function() {
-					return $http.get(url + '/boxDiscount/getAll/')
+					return $http.get(url + '/addBuy/getAll/')
 							.then(
 									function(response){
 										return response.data;

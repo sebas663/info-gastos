@@ -7,50 +7,56 @@ App.controller('BoxDiscountCtrl', BoxDiscountCtrl);
 App.controller('CreditCardDiscountCtrl', CreditCardDiscountCtrl);
 
 
-function AddBuyController ($scope,AddBuyService,AutocompleteService, $filter){
+function AddBuyController ($scope,AddBuyService,AutocompleteService,LocalStorageService, $filter){
 
 		  var self = this;
-          var oriBuy = {id:null,companyID:null,productID:null,external_code:'',quantity:null,price:null,buyDate:null,total:null};
-          var oriBoxDiscount = {id:null,boxDiscountID:null,quantity:null,amount:null};
-          var oriCreditCardDiscount = {id:null,creditCardDiscountID:null,amount:null,base:null};
+          var oriTicket = {id:null,companyID:null,buyDate:null,total:null,buys:[],boxDiscounts:[],creditCardDiscounts:[]};
+          var oriBuy = {id:null,index:null,productID:null,external_code:'',quantity:null,price:null,total:null};
+          // var oriBoxDiscount = {id:null,boxDiscountID:null,quantity:null,amount:null};
+          // var oriCreditCardDiscount = {id:null,creditCardDiscountID:null,amount:null,base:null};
+          self.ticket = angular.copy(oriTicket);
           self.buy = angular.copy(oriBuy);
-          self.boxDiscount = angular.copy(oriBoxDiscount);
-          self.creditCardDiscount = angular.copy(oriCreditCardDiscount);
+          // self.boxDiscount = angular.copy(oriBoxDiscount);
+          // self.creditCardDiscount = angular.copy(oriCreditCardDiscount);
           self.buys=[];
           self.boxDiscounts=[];
           self.creditCardDiscounts=[];
           self.companies=[];
           self.products=[];
-          self.buy.buyDate = new Date();
+
+          //autocomplete block
           self.resetAutocomplete = false;
           self.querySearch  = AutocompleteService.querySearch;
           self.getObjectById  = AutocompleteService.getObjectById;
+          //autocomplete block
+          self.isDisabledImputs = false;
+          self.isNewRecord = true;
 
-          self.fetchAll = function(){
-             AddBuyService.fetchAll()
+          self.fetchTicket = function(){
+            LocalStorageService.fetchTicket()
                  .then(
       					       function(d) {
-      						        self.buys = d;
-
+      						        self.ticket = d;
+                         // console.log("ticket controller " + angular.toJson(d));
       					       },
             					function(errResponse){
             						console.error(errResponse);
             					}
       			       );
           };
-
-          self.createBuy = function(buy){
-              AddBuyService.createBuy(buy)
-		              .then(
-                      self.fetchAll,
-				              function(errResponse){
-					               console.error('Error while creating Buy.');
-				              }
-                  );
+          self.addBuyToTicket = function(buy,ticket){
+            LocalStorageService.addBuyToTicket(buy,ticket)
+              .then(
+                self.fetchTicket,
+                function(errResponse){
+                  console.error('Error while creating Buy.');
+                }
+              );
           };
 
-          self.updateBuy = function(buy, id){
-              AddBuyService.updateBuy(buy, id)
+
+          self.updateBuyInTicket = function(buy,ticket){
+            LocalStorageService.updateBuyInTicket(buy,ticket)
 		              .then(
 				              self.fetchAll,
 				              function(errResponse){
@@ -59,8 +65,8 @@ function AddBuyController ($scope,AddBuyService,AutocompleteService, $filter){
                   );
           };
 
-          self.deleteBuy = function(id){
-              AddBuyService.deleteBuy(id)
+          self.deleteBuy = function(index,ticket){
+            LocalStorageService.deleteBuyInTicket(index,ticket)
 		              .then(
 				              self.fetchAll,
 				              function(errResponse){
@@ -79,7 +85,7 @@ function AddBuyController ($scope,AddBuyService,AutocompleteService, $filter){
               );
           };
 
-          self.fetchAll();
+          self.fetchTicket();
 
           self.getTotal = function(){
             var total = 0;
@@ -90,13 +96,13 @@ function AddBuyController ($scope,AddBuyService,AutocompleteService, $filter){
             return total;
           }
 
-          self.submitBuy = function() {
-              if(self.buy.id==null){
-     //             console.log('Saving New buy', self.buy);
-                  self.createBuy(self.buy);
+          self.submitBuy = function(isNew) {
+              if(isNew){
+                self.isDisabledImputs = true;
+                self.addBuyToTicket(self.buy,self.ticket);
               }else{
-                  self.updateBuy(self.buy, self.buy.id);
-//                  console.log('User updated with id ', self.user.id);
+                self.updateBuyInTicket(self.buy,self.ticket);
+                self.isNewRecord = true;
               }
             self.reset('buyForm');
           };
@@ -122,7 +128,7 @@ function AddBuyController ($scope,AddBuyService,AutocompleteService, $filter){
           };
           self.submitBuys = function() {
             if( self.buys.length > 0 ){
-              //             console.log('Saving New buy', self.buy);
+
               self.saveBuys(self.buys);
             }else{
 //                  console.log('User updated with id ', self.user.id);
@@ -131,22 +137,17 @@ function AddBuyController ($scope,AddBuyService,AutocompleteService, $filter){
 
           };
 
-          self.edit = function(id){
-//              console.log('id to be edited', id);
-              for(var i = 0; i < self.buys.length; i++){
-                  if(self.buys[i].id == id) {
-                     setBuyDefaults(self.buys[i]);
-                     break;
-                  }
-              }
+          self.edit = function(buy){
+            setBuyDefaults(buy);
+            self.isNewRecord = false;
           };
 
-          self.remove = function(id){
+          self.remove = function(index){
 //              console.log('id to be deleted', id);
-              if(self.buy.id === id) {//clean form if the user to be deleted is shown there.
+              if(angular.equals(self.buy.index, index)) {//clean form if the user to be deleted is shown there.
                  self.reset();
               }
-              self.deleteBuy(id);
+              self.deleteBuy(index,self.ticket);
           };
 
           self.reset = function(type){
@@ -154,8 +155,6 @@ function AddBuyController ($scope,AddBuyService,AutocompleteService, $filter){
               $scope.buyForm.$setPristine(); //reset Form
               self.buy = angular.copy(oriBuy);
               self.buy.buyDate = new Date();
-              self.selectedCompany = null;
-              self.searchTxtCompany = "";
               self.selectedProduct = null;
               self.searchTxtProduct = "";
             }
@@ -171,7 +170,9 @@ function AddBuyController ($scope,AddBuyService,AutocompleteService, $filter){
             }
 
           };
-
+         /*
+          *      autocomplete block
+          */
           $scope.populateArray = function(array,type){
             if(type == 'company'){
               self.companies = array;
@@ -189,28 +190,28 @@ function AddBuyController ($scope,AddBuyService,AutocompleteService, $filter){
 
           self.selectedCompanyChange = function (item) {
             if (item && item.id) {
-              self.buy.companyID = item.id;
+              self.ticket.companyID = item.id;
             }
           }
           self.selectedProductChange = function (item) {
             if (item && item.id) {
-              self.buy.companyID = item.id;
+              // console.log("item.id " + item.id);
+              self.buy.productID = item.id;
             }
           }
           function setBuyDefaults(object) {
             self.buy = angular.copy(object);
             self.buy.buyDate = new Date(self.buy.buyDate);
-            var result =  self.getObjectById(self.buy.companyID,self.companies);
-            var result2 = self.getObjectById(self.buy.productID,self.products);
+            var result = self.getObjectById(self.buy.productID,self.products);
             if (result) {
-              self.selectedCompany = result.description;
-              self.searchTxtCompany = result.description;
-            }
-            if (result2) {
-              self.selectedProduct = result2.description;
-              self.searchTxtProduct = result2.description;
+              self.selectedProduct = result.description;
+              self.searchTxtProduct = result.description;
             }
           }
+        /*
+         *    end  autocomplete block
+         */
+
 }
 
 function CompanyCtrl ($scope, CompanyService,$mdDialog) {

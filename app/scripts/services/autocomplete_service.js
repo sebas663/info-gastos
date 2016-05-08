@@ -18,6 +18,11 @@ App.factory('AutocompleteService', ['$filter', '$q', '$timeout', function($filte
             obj = array[i];
           }
         }
+        /*angular.forEach(array, function(value, key) {;
+          if(angular.equals(id, value.id)){
+             obj = array[key];
+          }
+        });*/
         return obj;
       }
 	};

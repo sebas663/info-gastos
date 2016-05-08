@@ -1,6 +1,6 @@
 <div class="panel panel-default">
   <div class="formcontainer">
-    <form ng-submit="ctrl.submitBuy()" name="buyForm" class="form-horizontal">
+    <form ng-submit="ctrl.submitBuy(ctrl.isNewRecord)" name="buyForm" class="form-horizontal">
       <input type="hidden" ng-model="ctrl.buy.id" />
       <div class="row">
         <div class="form-group col-md-12">
@@ -10,7 +10,11 @@
               <div flex="80">
                 <md-content class="md-padding">
                   <!--<md-input-container class="md-input-custom">-->
-                  <md-datepicker name="dateField" ng-model="ctrl.buy.buyDate" md-placeholder="Fecha de compra" required ></md-datepicker>
+                  <md-datepicker name="dateField"
+                                 ng-model="ctrl.ticket.buyDate"
+                                 md-placeholder="Fecha de compra"
+                                 required
+                                 ng-disabled="ctrl.isDisabledImputs"></md-datepicker>
                   <div class="validation-messages" ng-messages="buyForm.dateField.$error">
                     <div ng-message="valid">El dato ingresado no es una fecha!</div>
                     <div ng-message="required">La fecha es requerida!</div>
@@ -75,7 +79,7 @@
 
       <div class="row">
         <div class="form-actions floatRight">
-          <input type="submit"  value="{{!ctrl.buy.id ? 'Agregar' : 'Update'}}" class="btn btn-primary btn-sm" ng-disabled="buyForm.$invalid">
+          <input type="submit"  value="{{ctrl.isNewRecord ? 'Agregar' : 'Update'}}" class="btn btn-primary btn-sm" ng-disabled="buyForm.$invalid">
           <button type="button" ng-click="ctrl.reset('buyForm')" class="btn btn-warning btn-sm" ng-disabled="buyForm.$pristine">Limpiar campos</button>
         </div>
       </div>

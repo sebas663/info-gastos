@@ -2,14 +2,14 @@
    <div class="form-group">
         <label for="lbldate" class="col-sm-3 form-control-label"> Fecha: </label>
         <div class="col-sm-12">
-           <input type="text" class="form-control" id="lbldate" ng-value="ctrl.buy.buyDate| date: 'dd-MM-yyyy'" readonly>
+           <input type="text" class="form-control" id="lbldate" ng-value="ctrl.ticket.buyDate| date: 'dd-MM-yyyy'" readonly>
         </div>
    </div>
 
    <div class="form-group">
       <div class="col-xs-4">
        <label for="lblcompany" class="form-control-label">Empresa: </label>
-       <input type="text" class="form-control "  id="lblcompany" ng-value="ctrl.getObjectById(ctrl.buy.companyID,ctrl.companies).description" readonly style="width: 450px;">
+       <input type="text" class="form-control "  id="lblcompany" ng-value="ctrl.getObjectById(ctrl.ticket.companyID,ctrl.companies).description" readonly style="width: 450px;">
      </div>
    </div>
 </div>
@@ -31,7 +31,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="u in ctrl.buys">
+    <tr ng-repeat="u in ctrl.ticket.buys">
 <!--            <td><span ng-bind="u.id"></span></td>
       <td><span ng-bind="u.buyDate| date: 'dd-MM-yyyy'"></span></td>
       <td><span ng-bind="ctrl.getCompanyById(u.companyID).description"></span></td>-->
@@ -42,12 +42,12 @@
       <td><span ng-bind="u.total"></span></td>
       <td><md-checkbox aria-label="Discount"></md-checkbox></td>
       <td>
-        <button type="button" ng-click="ctrl.edit(u.id)" class="btn btn-success custom-width">Editar</button>
-        <button type="button" ng-click="ctrl.remove(u.id)" class="btn btn-danger custom-width">Eliminar</button>
+        <button type="button" ng-click="ctrl.edit(u)" class="btn btn-success custom-width">Editar</button>
+        <button type="button" ng-click="ctrl.remove($index)" class="btn btn-danger custom-width">Eliminar</button>
       </td>
     </tr>
     <tr>
-      <td><span>SUBTOTAL COMPRAS: ${{ctrl.getTotal()}}</span></td>
+      <td><span>SUBTOTAL COMPRAS: ${{ctrl.ticket.total}}</span></td>
     </tr>
     </tbody>
   </table>

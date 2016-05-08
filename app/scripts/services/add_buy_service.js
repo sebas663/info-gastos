@@ -1,20 +1,26 @@
 'use strict';
 
 App.factory('AddBuyService', ['$http', '$q', '$log', function($http, $q, $log){
+  var oriTicket = {id:null,companyID:null,buyDate:null,total:null,buys:[],boxDiscounts:[],creditCardDiscounts:[]};
+  function getTicket(){
+    var deferred = $q.defer();
+    deferred.resolve(oriTicket);
+    return deferred.promise;
+  }
 	return {
-
-			fetchAll: function() {
-					return $http.get(url + '/addBuy/getAll/')
-							.then(
-									function(response){
-										return response.data;
-									},
-									function(errResponse){
-										console.error(errResponse);
-										return $q.reject(errResponse);
-									}
-							);
-			},
+        fetchAll: function() {
+            // return $http.get(url + '/addBuy/getAll/')
+          return getTicket()
+                .then(
+                    function(response){
+                      return response.data;
+                    },
+                    function(errResponse){
+                      console.error(errResponse);
+                      return $q.reject(errResponse);
+                    }
+                );
+        },
 
 		    createBuy: function(buy){
 					return $http.post(url + '/addBuy/add/', buy)
@@ -28,6 +34,10 @@ App.factory('AddBuyService', ['$http', '$q', '$log', function($http, $q, $log){
 									}
 							);
 		    },
+        addBuyToList: function(buy){
+          oriTicket.buys.push(buy);
+          return oriTicket;
+        },
 
 		    updateBuy: function(buy, id){
 					return $http.put(url + '/addBuy/update/' + id, buy)
