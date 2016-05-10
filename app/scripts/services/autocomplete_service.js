@@ -9,6 +9,8 @@ App.factory('AutocompleteService', ['$filter', '$q', '$timeout', function($filte
   }
 	return {
       querySearch: function  (query,array) {
+        // console.log("query " + query);
+        // console.log("array " + array);
         return query ? array.filter( createFilterFor(query) ) : array;
       },
       getObjectById: function(id,array){

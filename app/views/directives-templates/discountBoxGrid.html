@@ -8,10 +8,10 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="u in ctrl.buys">
-      <td><span ng-bind="ctrl.getProductById(u.productID).description"></span></td>
+    <tr ng-repeat="u in ctrl.ticket.boxDiscounts">
+      <td><span ng-bind="ctrl.getObjectById(u.boxDiscountID,ctrl.boxDiscounts).description"></span></td>
       <td><span ng-bind="u.quantity"></span></td>
-      <td><span ng-bind="u.price"></span></td>
+      <td><span ng-bind="u.amount"></span></td>
     </tr>
     <tr>
       <td><span>SUBTOTAL DESCUENTOS CAJA: ${{ctrl.getTotal()}}</span></td>

@@ -1,6 +1,6 @@
 <div class="panel panel-default">
   <div class="formcontainer">
-    <form ng-submit="ctrl.submitDiscCreditCard()" name="creditCardForm" class="form-horizontal">
+    <form ng-submit="ctrl.submitDiscCreditCard(ctrl.isNewRecord)" name="creditCardForm" class="form-horizontal">
       <input type="hidden" ng-model="ctrl.creditCardDiscount.id" />
 
       <div class="row">
@@ -40,7 +40,7 @@
 
       <div class="row">
         <div class="form-actions floatRight">
-          <input type="submit"  value="{{!ctrl.buy.id ? 'Agregar' : 'Update'}}" class="btn btn-primary btn-sm" ng-disabled="creditCardForm.$invalid">
+          <input type="submit"  value="{{ctrl.isNewRecord ? 'Agregar' : 'Update'}}" class="btn btn-primary btn-sm" ng-disabled="creditCardForm.$invalid">
           <button type="button" ng-click="ctrl.reset('creditCardForm')" class="btn btn-warning btn-sm" ng-disabled="creditCardForm.$pristine">Limpiar campos</button>
         </div>
       </div>

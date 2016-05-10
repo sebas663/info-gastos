@@ -2,12 +2,19 @@
     <div layout="row" ng-cloak="" >
       <div flex="80">
         <md-content class="md-padding">
-          <md-autocomplete  md-selected-item="bdctrl.selectedItem"  md-search-text="bdctrl.searchText" md-selected-item-change="bdctrl.selectedItemChange(item)" md-items="item in bdctrl.querySearch(bdctrl.searchText)" md-item-text="item.description" md-min-length="0" placeholder="Descuento de caja" md-no-cache="true">
+          <md-autocomplete  md-selected-item="ctrl.selectedBoxDiscount"
+                            md-search-text="ctrl.searchTextBoxDiscount"
+                            md-selected-item-change="ctrl.selectedItemChange(item,'boxDiscount')"
+                            md-items="item in ctrl.querySearch(ctrl.searchTextBoxDiscount,ctrl.boxDiscounts)"
+                            md-item-text="item.description"
+                            md-min-length="0"
+                            placeholder="Descuento de caja"
+                            md-no-cache="true">
             <md-item-template>
-              <span md-highlight-text="bdctrl.searchText" md-highlight-flags="^i">{{item.description}}</span>
+              <span md-highlight-text="ctrl.searchTextBoxDiscount" md-highlight-flags="^i">{{item.description}}</span>
             </md-item-template>
           <md-not-found>
-            No se encontro "{{bdctrl.searchText}}" pulse icono para agregar.
+            No se encontro "{{ctrl.searchTextBoxDiscount}}" pulse icono para agregar.
           </md-not-found>
           </md-autocomplete>
         </md-content>

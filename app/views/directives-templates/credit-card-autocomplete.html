@@ -2,12 +2,19 @@
     <div layout="row" ng-cloak="" >
       <div flex="80">
         <md-content class="md-padding">
-          <md-autocomplete  md-selected-item="ccdctrl.selectedItem"  md-search-text="ccdctrl.searchText" md-selected-item-change="ccdctrl.selectedItemChange(item)" md-items="item in ccdctrl.querySearch(ccdctrl.searchText)" md-item-text="item.description" md-min-length="0" placeholder="Tarjeta bancaria" md-no-cache="true">
+          <md-autocomplete  md-selected-item="ctrl.selectedCreditCard"
+                            md-search-text="ctrl.searchTextCreditCard"
+                            md-selected-item-change="ctrl.selectedItemChange(item,'creditCardDiscount')"
+                            md-items="item in ctrl.querySearch(ctrl.searchTextCreditCard,ctrl.creditCardDiscounts)"
+                            md-item-text="item.description"
+                            md-min-length="0"
+                            placeholder="Tarjeta bancaria"
+                            md-no-cache="true">
             <md-item-template>
-              <span md-highlight-text="ccdctrl.searchText" md-highlight-flags="^i">{{item.description}}</span>
+              <span md-highlight-text="ctrl.searchTextCreditCard" md-highlight-flags="^i">{{item.description}}</span>
             </md-item-template>
           <md-not-found>
-            No se encontro "{{ccdctrl.searchText}}" pulse icono para agregar.
+            No se encontro "{{ctrl.searchTextCreditCard}}" pulse icono para agregar.
           </md-not-found>
           </md-autocomplete>
         </md-content>

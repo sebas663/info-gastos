@@ -7,17 +7,17 @@ App.controller('BoxDiscountCtrl', BoxDiscountCtrl);
 App.controller('CreditCardDiscountCtrl', CreditCardDiscountCtrl);
 
 
-function AddBuyController ($scope,AddBuyService,AutocompleteService,LocalStorageService, $filter){
+function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageService, $filter){
 
 		  var self = this;
           var oriTicket = {id:null,companyID:null,buyDate:null,total:null,buys:[],boxDiscounts:[],creditCardDiscounts:[]};
           var oriBuy = {id:null,index:null,productID:null,external_code:'',quantity:null,price:null,total:null};
-          // var oriBoxDiscount = {id:null,boxDiscountID:null,quantity:null,amount:null};
-          // var oriCreditCardDiscount = {id:null,creditCardDiscountID:null,amount:null,base:null};
+          var oriBoxDiscount = {id:null,boxDiscountID:null,quantity:null,amount:null};
+          var oriCreditCardDiscount = {id:null,creditCardDiscountID:null,amount:null,base:null};
           self.ticket = angular.copy(oriTicket);
           self.buy = angular.copy(oriBuy);
-          // self.boxDiscount = angular.copy(oriBoxDiscount);
-          // self.creditCardDiscount = angular.copy(oriCreditCardDiscount);
+          self.boxDiscount = angular.copy(oriBoxDiscount);
+          self.creditCardDiscount = angular.copy(oriCreditCardDiscount);
           self.buys=[];
           self.boxDiscounts=[];
           self.creditCardDiscounts=[];
@@ -58,7 +58,7 @@ function AddBuyController ($scope,AddBuyService,AutocompleteService,LocalStorage
           self.updateBuyInTicket = function(buy,ticket){
             LocalStorageService.updateBuyInTicket(buy,ticket)
 		              .then(
-				              self.fetchAll,
+				              self.fetchTicket,
 				              function(errResponse){
 					               console.error('Error while updating Buy.');
 				              }
@@ -68,17 +68,77 @@ function AddBuyController ($scope,AddBuyService,AutocompleteService,LocalStorage
           self.deleteBuy = function(index,ticket){
             LocalStorageService.deleteBuyInTicket(index,ticket)
 		              .then(
-				              self.fetchAll,
+				              self.fetchTicket,
 				              function(errResponse){
 					               console.error('Error while deleting Buy.');
 				              }
                   );
           };
+          self.addBoxDiscountToTicket = function(boxDiscount,ticket){
+            LocalStorageService.addBoxDiscountToTicket(boxDiscount,ticket)
+              .then(
+                self.fetchTicket,
+                function(errResponse){
+                  console.error('Error while creating BoxDiscount.');
+                }
+              );
+          };
+
+
+          self.updateBoxDiscountInTicket = function(boxDiscount,ticket){
+            LocalStorageService.updateBoxDiscountInTicket(boxDiscount,ticket)
+              .then(
+                self.fetchTicket,
+                function(errResponse){
+                  console.error('Error while updating BoxDiscount.');
+                }
+              );
+          };
+
+          self.deleteBoxDiscount = function(index,ticket){
+            LocalStorageService.deleteBoxDiscountInTicket(index,ticket)
+              .then(
+                self.fetchTicket,
+                function(errResponse){
+                  console.error('Error while deleting BoxDiscount.');
+                }
+              );
+          };
+          self.addCreditCardDiscountToTicket = function(creditCardDiscount,ticket){
+            LocalStorageService.addCreditCardDiscountToTicket(creditCardDiscount,ticket)
+              .then(
+                self.fetchTicket,
+                function(errResponse){
+                  console.error('Error while creating CreditCardDiscount.');
+                }
+              );
+          };
+
+
+          self.updateCreditCardDiscountInTicket = function(creditCardDiscount,ticket){
+            LocalStorageService.updateCreditCardDiscountInTicket(creditCardDiscount,ticket)
+              .then(
+                self.fetchTicket,
+                function(errResponse){
+                  console.error('Error while updating CreditCardDiscount.');
+                }
+              );
+          };
+
+          self.deleteCreditCardDiscount = function(index,ticket){
+            LocalStorageService.deleteCreditCardDiscountInTicket(index,ticket)
+              .then(
+                self.fetchTicket,
+                function(errResponse){
+                  console.error('Error while deleting CreditCardDiscount.');
+                }
+              );
+          };
 
           self.saveBuys = function(buys){
-            AddBuyService.saveBuys(buys)
+            BuyService.saveBuys(buys)
               .then(
-                self.fetchAll,
+                self.fetchTicket,
                 function(errResponse){
                   console.error('Error while save Buys.');
                 }
@@ -106,26 +166,28 @@ function AddBuyController ($scope,AddBuyService,AutocompleteService,LocalStorage
               }
             self.reset('buyForm');
           };
-          self.submitDiscBox = function() {
-            if(self.buy.id==null){
-              //             console.log('Saving New buy', self.buy);
-              self.createBuy(self.buy);
+
+          self.submitDiscBox = function(isNew) {
+            if(isNew){
+              self.addBoxDiscountToTicket(self.boxDiscount,self.ticket);
             }else{
-              self.updateBuy(self.buy, self.buy.id);
-        //                  console.log('User updated with id ', self.user.id);
+              self.updateBoxDiscountInTicket(self.boxDiscount,self.ticket);
+              self.isNewRecord = true;
             }
-            self.reset();
+            self.reset('discBoxForm');
           };
-          self.submitDiscCreditCard = function() {
-            if(self.buy.id==null){
-              //             console.log('Saving New buy', self.buy);
-              self.createBuy(self.buy);
+
+          self.submitDiscCreditCard = function(isNew) {
+            if(isNew){
+              self.addCreditCardDiscountToTicket(self.creditCardDiscount,self.ticket);
             }else{
-              self.updateBuy(self.buy, self.buy.id);
-        //                  console.log('User updated with id ', self.user.id);
+              self.updateCreditCardDiscountInTicket(self.creditCardDiscount,self.ticket);
+              self.isNewRecord = true;
             }
-            self.reset();
+            self.reset('creditCardForm');
           };
+
+
           self.submitBuys = function() {
             if( self.buys.length > 0 ){
 
@@ -188,15 +250,21 @@ function AddBuyController ($scope,AddBuyService,AutocompleteService,LocalStorage
             }
           }
 
-          self.selectedCompanyChange = function (item) {
+          self.selectedItemChange = function (item,type){
             if (item && item.id) {
-              self.ticket.companyID = item.id;
-            }
-          }
-          self.selectedProductChange = function (item) {
-            if (item && item.id) {
-              // console.log("item.id " + item.id);
-              self.buy.productID = item.id;
+              if(type == 'company'){
+                self.ticket.companyID = item.id;
+              }
+              else if (type == 'product'){
+                self.buy.productID = item.id;
+              }
+              else if (type == 'boxDiscount'){
+                self.boxDiscount.boxDiscountID = item.id;
+              }
+              else if (type == 'creditCardDiscount'){
+                self.creditCardDiscount.creditCardDiscountID = item.id;
+              }
+
             }
           }
           function setBuyDefaults(object) {

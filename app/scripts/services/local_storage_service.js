@@ -22,7 +22,7 @@ App.factory('LocalStorageService', ['$http', '$q', '$log', function($http, $q, $
     ticket.buys = updateObjectByIndex(buy,ticket.buys);
     return getPromise(ticket);
   }
-  function deleteBuyInTicket(index, ticket){
+  function deleteBuyInTicket(index,ticket){
     ticket.buys.splice(index, 1);
     return getPromise(ticket);
   }
@@ -30,12 +30,11 @@ App.factory('LocalStorageService', ['$http', '$q', '$log', function($http, $q, $
     ticket.boxDiscounts.push(boxDiscount);
     return getPromise(ticket);
   }
-  function updateBoxDiscountInTicket(boxDiscount, id, ticket){
-    ticket.boxDiscounts = updateObjectById(boxDiscount,id,ticket.boxDiscounts);
+  function updateBoxDiscountInTicket(boxDiscount,ticket){
+    ticket.boxDiscounts = updateObjectByIndex(boxDiscount,ticket.boxDiscounts);
     return getPromise(ticket);
   }
-  function deleteBoxDiscountInTicket(id, ticket){
-    var index = getObjectById (id,ticket.boxDiscounts);
+  function deleteBoxDiscountInTicket(index,ticket){
     ticket.boxDiscounts.splice(index, 1);
     return getPromise(ticket);
   }
@@ -43,13 +42,12 @@ App.factory('LocalStorageService', ['$http', '$q', '$log', function($http, $q, $
     ticket.creditCardDiscounts.push(creditCardDiscount);
     return getPromise(ticket);
   }
-  function updateCreditCardDiscountInTicket(creditCardDiscount, id, ticket){
-    ticket.creditCardDiscounts = updateObjectById(creditCardDiscount,id,ticket.creditCardDiscounts);
+  function updateCreditCardDiscountInTicket(creditCardDiscount,ticket){
+    ticket.creditCardDiscounts = updateObjectByIndex(creditCardDiscount,ticket.creditCardDiscounts);
     return getPromise(ticket);
   }
-  function deleteCreditCardDiscountInTicket(id, ticket){
-    var index = getObjectById (id,ticket.creditCardDiscount);
-    ticket.boxDiscounts.splice(index, 1);
+  function deleteCreditCardDiscountInTicket(index, ticket){
+    ticket.creditCardDiscounts.splice(index, 1);
     return getPromise(ticket);
   }
   function getObjectById (id,array){
@@ -65,11 +63,11 @@ App.factory('LocalStorageService', ['$http', '$q', '$log', function($http, $q, $
     return obj;
   }
   function updateObjectByIndex (obj,array){
-    console.log("obj " + angular.toJson(obj));
+    // console.log("obj " + angular.toJson(obj));
     if(array) {
       angular.forEach(array, function(value, key) {
-        console.log("obj.index " + obj.index);
-        console.log("key " + key);
+        // console.log("obj.index " + obj.index);
+        // console.log("key " + key);
          if(angular.equals(key, obj.index)){
            array[key] = obj;
          }
@@ -150,8 +148,8 @@ App.factory('LocalStorageService', ['$http', '$q', '$log', function($http, $q, $
             );
         },
 
-        updateBoxDiscountInTicket: function(boxDiscount, id, ticket){
-          return updateBoxDiscountInTicket(boxDiscount, id, ticket)
+        updateBoxDiscountInTicket: function(boxDiscount,ticket){
+          return updateBoxDiscountInTicket(boxDiscount,ticket)
             .then(
               function(response){
                 return response.data;
@@ -163,8 +161,8 @@ App.factory('LocalStorageService', ['$http', '$q', '$log', function($http, $q, $
             );
         },
 
-        deleteBoxDiscountInTicket: function(id,ticket){
-          return deleteBoxDiscountInTicket(id, ticket)
+        deleteBoxDiscountInTicket: function(index,ticket){
+          return deleteBoxDiscountInTicket(index, ticket)
             .then(
               function(response){
                 return response.data;
@@ -188,8 +186,8 @@ App.factory('LocalStorageService', ['$http', '$q', '$log', function($http, $q, $
             );
         },
 
-        updateCreditCardDiscountInTicket: function(creditCardDiscount, id, ticket){
-          return updateCreditCardDiscountInTicket(creditCardDiscount, id, ticket)
+        updateCreditCardDiscountInTicket: function(creditCardDiscount,ticket){
+          return updateCreditCardDiscountInTicket(creditCardDiscount,ticket)
             .then(
               function(response){
                 return response.data;
@@ -201,8 +199,8 @@ App.factory('LocalStorageService', ['$http', '$q', '$log', function($http, $q, $
             );
         },
 
-        deleteCreditCardDiscountInTicket: function(id,ticket){
-          return deleteCreditCardDiscountInTicket(id, ticket)
+        deleteCreditCardDiscountInTicket: function(index,ticket){
+          return deleteCreditCardDiscountInTicket(index, ticket)
             .then(
               function(response){
                 return response.data;

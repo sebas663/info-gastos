@@ -1,16 +1,9 @@
 'use strict';
 
-App.factory('AddBuyService', ['$http', '$q', '$log', function($http, $q, $log){
-  var oriTicket = {id:null,companyID:null,buyDate:null,total:null,buys:[],boxDiscounts:[],creditCardDiscounts:[]};
-  function getTicket(){
-    var deferred = $q.defer();
-    deferred.resolve(oriTicket);
-    return deferred.promise;
-  }
+App.factory('BuyService', ['$http', '$q', '$log', function($http, $q, $log){
 	return {
         fetchAll: function() {
-            // return $http.get(url + '/addBuy/getAll/')
-          return getTicket()
+             return $http.get(url + '/Buy/getAll/')
                 .then(
                     function(response){
                       return response.data;
@@ -23,7 +16,7 @@ App.factory('AddBuyService', ['$http', '$q', '$log', function($http, $q, $log){
         },
 
 		    createBuy: function(buy){
-					return $http.post(url + '/addBuy/add/', buy)
+					return $http.post(url + '/Buy/add/', buy)
 							.then(
 									function(response){
 										return response.data;
@@ -34,13 +27,13 @@ App.factory('AddBuyService', ['$http', '$q', '$log', function($http, $q, $log){
 									}
 							);
 		    },
-        addBuyToList: function(buy){
+        BuyToList: function(buy){
           oriTicket.buys.push(buy);
           return oriTicket;
         },
 
 		    updateBuy: function(buy, id){
-					return $http.put(url + '/addBuy/update/' + id, buy)
+					return $http.put(url + '/Buy/update/' + id, buy)
 							.then(
 									function(response){
 										return response.data;
@@ -53,7 +46,7 @@ App.factory('AddBuyService', ['$http', '$q', '$log', function($http, $q, $log){
 			},
 
 			deleteBuy: function(id){
-					return $http.delete( url + '/addBuy/delete/'+id)
+					return $http.delete( url + '/Buy/delete/'+id)
 							.then(
 									function(response){
 										return response.data;
@@ -66,7 +59,7 @@ App.factory('AddBuyService', ['$http', '$q', '$log', function($http, $q, $log){
 			},
 
       saveBuys: function(buys){
-        return $http.post( url + '/addBuy/save/' , angular.toJson(buys))
+        return $http.post( url + '/Buy/save/' , angular.toJson(buys))
           .then(
             function(response){
               return response.data;

@@ -1,6 +1,6 @@
 <div class="panel panel-default">
   <div class="formcontainer">
-    <form ng-submit="ctrl.submitDiscBox()" name="discBoxForm" class="form-horizontal">
+    <form ng-submit="ctrl.submitDiscBox(ctrl.isNewRecord)" name="discBoxForm" class="form-horizontal">
       <input type="hidden" ng-model="ctrl.boxDiscount.id" />
 
       <div class="row">
@@ -41,7 +41,7 @@
 
       <div class="row">
         <div class="form-actions floatRight">
-          <input type="submit"  value="{{!ctrl.buy.id ? 'Agregar' : 'Update'}}" class="btn btn-primary btn-sm" ng-disabled="discBoxForm.$invalid">
+          <input type="submit"  value="{{ctrl.isNewRecord ? 'Agregar' : 'Update'}}" class="btn btn-primary btn-sm" ng-disabled="discBoxForm.$invalid">
           <button type="button" ng-click="ctrl.reset('discBoxForm')" class="btn btn-warning btn-sm" ng-disabled="discBoxForm.$pristine">Limpiar campos</button>
         </div>
       </div>

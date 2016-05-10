@@ -4,7 +4,7 @@ App.factory('CreditCardDiscountService', ['$http', '$q', function($http, $q){
 	return {
 
 			fetchAll: function() {
-					return $http.get(url + '/addBuy/getAll/')
+					return $http.get(url + '/CreditCardDiscount/getAll/')
 							.then(
 									function(response){
 										return response.data;
@@ -17,7 +17,7 @@ App.factory('CreditCardDiscountService', ['$http', '$q', function($http, $q){
 			},
 
       create: function(obj){
-        return $http.post(url + '/creditCardDiscount/create/', obj)
+        return $http.post(url + '/CreditCardDiscount/create/', obj)
             .then(
                 function(response){
                   return response.data;
@@ -30,7 +30,7 @@ App.factory('CreditCardDiscountService', ['$http', '$q', function($http, $q){
       },
 
       update: function(obj, id){
-					return $http.put(url + '/creditCardDiscount/update/' + id, obj)
+					return $http.put(url + '/CreditCardDiscount/update/' + id, obj)
 							.then(
 									function(response){
 										return response.data;
@@ -43,7 +43,7 @@ App.factory('CreditCardDiscountService', ['$http', '$q', function($http, $q){
 			},
 
 			delete: function(id){
-					return $http.delete( url + '/creditCardDiscount/delete/'+id)
+					return $http.delete( url + '/CreditCardDiscount/delete/'+id)
 							.then(
 									function(response){
 										return response.data;
