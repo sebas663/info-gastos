@@ -10,10 +10,21 @@ App.controller('CreditCardDiscountCtrl', CreditCardDiscountCtrl);
 function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageService, $filter){
 
 		  var self = this;
-          var oriTicket = {id:null,companyID:null,buyDate:null,total:null,buys:[],boxDiscounts:[],creditCardDiscounts:[]};
-          var oriBuy = {id:null,index:null,productID:null,external_code:'',quantity:null,price:null,total:null};
-          var oriBoxDiscount = {id:null,boxDiscountID:null,quantity:null,amount:null};
-          var oriCreditCardDiscount = {id:null,creditCardDiscountID:null,amount:null,base:null};
+          var oriTicket = {
+                          id:null,
+                          companyID:null,
+                          buyDate:null,
+                          subtotal:null,
+                          subtotalBoxDiscount:null,
+                          subtotalCreditCardDiscount:null,
+                          total:null,
+                          buys:[],
+                          boxDiscounts:[],
+                          creditCardDiscounts:[]
+                         };
+          var oriBuy = {id:null,index:null,productID:null,external_code:'',quantity:null,price:null,amount:null};
+          var oriBoxDiscount = {id:null,index:null,boxDiscountID:null,percent:null,amount:null};
+          var oriCreditCardDiscount = {id:null,index:null,creditCardDiscountID:null,amount:null,base:null};
           self.ticket = angular.copy(oriTicket);
           self.buy = angular.copy(oriBuy);
           self.boxDiscount = angular.copy(oriBoxDiscount);
@@ -86,6 +97,7 @@ function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageSer
 
 
           self.updateBoxDiscountInTicket = function(boxDiscount,ticket){
+            console.log(' updateBoxDiscountInTicket ');
             LocalStorageService.updateBoxDiscountInTicket(boxDiscount,ticket)
               .then(
                 self.fetchTicket,
@@ -146,16 +158,7 @@ function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageSer
           };
 
           self.fetchTicket();
-
-          self.getTotal = function(){
-            var total = 0;
-            for(var i = 0; i < self.buys.length; i++){
-              var buy = self.buys[i];
-              total += buy.total;
-            }
-            return total;
-          }
-
+  
           self.submitBuy = function(isNew) {
               if(isNew){
                 self.isDisabledImputs = true;
@@ -199,17 +202,39 @@ function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageSer
 
           };
 
-          self.edit = function(buy){
-            setBuyDefaults(buy);
+          self.edit = function(obj,type){
+            if (type == 'buy'){
+              setBuyDefaults(obj);
+            }
+            else if (type == 'boxDiscount'){
+              setBoxDiscountDefaults(obj)
+            }
+            else if (type == 'creditCardDiscount'){
+              setCreditCardDiscountDefaults(obj)
+            }
             self.isNewRecord = false;
           };
 
-          self.remove = function(index){
-//              console.log('id to be deleted', id);
+          self.remove = function(index,type){
+            if (type == 'buy'){
               if(angular.equals(self.buy.index, index)) {//clean form if the user to be deleted is shown there.
-                 self.reset();
+                self.reset('buyForm');
               }
               self.deleteBuy(index,self.ticket);
+            }
+            else if (type == 'boxDiscount'){
+              if(angular.equals(self.boxDiscount.index, index)) {//clean form if the user to be deleted is shown there.
+                self.reset('discBoxForm');
+              }
+              self.deleteBoxDiscount(index,self.ticket);
+            }
+            else if (type == 'creditCardDiscount'){
+              if(angular.equals(self.creditCardDiscount.index, index)) {//clean form if the user to be deleted is shown there.
+                self.reset('creditCardForm');
+              }
+              self.deleteCreditCardDiscount(index,self.ticket);
+            }
+
           };
 
           self.reset = function(type){
@@ -223,12 +248,14 @@ function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageSer
             else if (type == 'creditCardForm'){
               $scope.creditCardForm.$setPristine(); //reset Form
               self.creditCardDiscount = angular.copy(oriCreditCardDiscount);
-
+              self.selectedCreditCard = null;
+              self.searchTextCreditCard = "";
             }
             else if (type == 'discBoxForm'){
               $scope.discBoxForm.$setPristine(); //reset Form
               self.boxDiscount = angular.copy(oriBoxDiscount);
-
+              self.selectedBoxDiscount = null;
+              self.searchTextBoxDiscount = "";
             }
 
           };
@@ -267,19 +294,33 @@ function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageSer
 
             }
           }
+          /*
+           *    end  autocomplete block
+           */
           function setBuyDefaults(object) {
             self.buy = angular.copy(object);
-            self.buy.buyDate = new Date(self.buy.buyDate);
             var result = self.getObjectById(self.buy.productID,self.products);
             if (result) {
               self.selectedProduct = result.description;
               self.searchTxtProduct = result.description;
             }
           }
-        /*
-         *    end  autocomplete block
-         */
-
+          function setBoxDiscountDefaults(object) {
+            self.boxDiscount = angular.copy(object);
+            var result = self.getObjectById(self.boxDiscount.boxDiscountID,self.boxDiscounts);
+            if (result) {
+              self.selectedBoxDiscount = result.description;
+              self.searchTextBoxDiscount = result.description;
+            }
+          }
+          function setCreditCardDiscountDefaults(object) {
+            self.creditCardDiscount = angular.copy(object);
+            var result = self.getObjectById(self.creditCardDiscount.creditCardDiscountID,self.creditCardDiscounts);
+            if (result) {
+              self.selectedCreditCard = result.description;
+              self.searchTextCreditCard = result.description;
+            }
+          }
 }
 
 function CompanyCtrl ($scope, CompanyService,$mdDialog) {

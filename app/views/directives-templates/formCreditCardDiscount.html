@@ -3,20 +3,21 @@
     <form ng-submit="ctrl.submitDiscCreditCard(ctrl.isNewRecord)" name="creditCardForm" class="form-horizontal">
       <input type="hidden" ng-model="ctrl.creditCardDiscount.id" />
 
-      <div class="row">
-        <div class="form-group col-md-12 ">
-          <credit-card-autocomplete></credit-card-autocomplete>
+        <div class="row">
+          <div class="form-group col-md-12 ">
+            <credit-card-autocomplete></credit-card-autocomplete>
+          </div>
         </div>
-      </div>
 
       <div class="row">
         <div class="form-group col-md-12">
+
           <div class="col-md-4" >
             <div layout="row" ng-cloak="" >
               <div flex="80">
                 <md-content class="md-padding">
                   <!--<md-input-container class="md-input-custom">-->
-                  <input flex ng-model="ctrl.creditCardDiscount.percent" placeholder="porcentaje? o total">
+                  <input flex ng-model="ctrl.creditCardDiscount.percent" placeholder="Porcentaje">
                   <!--  </md-input-container>-->
                 </md-content>
               </div>
@@ -28,15 +29,16 @@
               <div flex="80">
                 <md-content class="md-padding">
                   <!--<md-input-container class="md-input-custom">-->
-                  <input flex ng-model="ctrl.creditCardDiscount.amount" placeholder="Monto">
+                  <input type="number" flex ng-model="ctrl.creditCardDiscount.amount" placeholder="Monto">
                   <!--  </md-input-container>-->
                 </md-content>
               </div>
             </div>
           </div>
-        </div>
+
         </div>
       </div>
+
 
       <div class="row">
         <div class="form-actions floatRight">

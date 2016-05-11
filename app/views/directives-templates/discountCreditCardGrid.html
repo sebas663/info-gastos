@@ -3,22 +3,23 @@
     <thead>
     <tr>
       <th>Descripcion</th>
-      <th>Pruducto</th>
-      <th>Cantidad</th>
+      <th>Porcentaje</th>
       <th>Monto</th>
-      <th>Subtotal</th>
+      <th width="15%"></th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="u in ctrl.buys">
-      <td><span ng-bind="ctrl.getProductById(u.productID).description"></span></td>
-      <td><span ng-bind="u.quantity"></span></td>
-      <td><span ng-bind="u.price"></span></td>
-      <td><span ng-bind="u.total"></span></td>
-      <td><span ng-bind="u.total"></span></td>
+    <tr ng-repeat="u in ctrl.ticket.creditCardDiscounts">
+      <td><span ng-bind="ctrl.getObjectById(u.creditCardDiscountID,ctrl.creditCardDiscounts).description"></span></td>
+      <td><span ng-bind="u.percent"></span></td>
+      <td><span ng-bind="u.amount"></span></td>
+      <td>
+        <button type="button" ng-click="ctrl.edit(u,'creditCardDiscount')" class="btn btn-success custom-width">Editar</button>
+        <button type="button" ng-click="ctrl.remove($index,'creditCardDiscount')" class="btn btn-danger custom-width">Eliminar</button>
+      </td>
     </tr>
     <tr>
-      <td><span>SUBTOTAL DESCUENTOS CAJA: ${{ctrl.getTotal()}}</span></td>
+      <td><span>SUBTOTAL DESCUENTOS EN RESUMEN: ${{ctrl.ticket.subtotalCreditCardDiscount}}</span></td>
     </tr>
     </tbody>
   </table>

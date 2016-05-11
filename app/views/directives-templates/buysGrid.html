@@ -39,15 +39,15 @@
       <td><span ng-bind="u.external_code"></span></td>
       <td><span ng-bind="u.quantity"></span></td>
       <td><span ng-bind="u.price"></span></td>
-      <td><span ng-bind="u.total"></span></td>
+      <td><span ng-bind="u.amount"></span></td>
       <td><md-checkbox aria-label="Discount"></md-checkbox></td>
       <td>
-        <button type="button" ng-click="ctrl.edit(u)" class="btn btn-success custom-width">Editar</button>
-        <button type="button" ng-click="ctrl.remove($index)" class="btn btn-danger custom-width">Eliminar</button>
+        <button type="button" ng-click="ctrl.edit(u,'buy')" class="btn btn-success custom-width">Editar</button>
+        <button type="button" ng-click="ctrl.remove($index,'buy')" class="btn btn-danger custom-width">Eliminar</button>
       </td>
     </tr>
     <tr>
-      <td><span>SUBTOTAL COMPRAS: ${{ctrl.ticket.total}}</span></td>
+      <td><span>SUBTOTAL COMPRAS: ${{ctrl.ticket.subtotal}}</span></td>
     </tr>
     </tbody>
   </table>

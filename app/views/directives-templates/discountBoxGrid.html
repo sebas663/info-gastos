@@ -5,6 +5,7 @@
       <th>Descripcion</th>
       <th>Cantidad</th>
       <th>Monto</th>
+      <th width="15%"></th>
     </tr>
     </thead>
     <tbody>
@@ -12,9 +13,13 @@
       <td><span ng-bind="ctrl.getObjectById(u.boxDiscountID,ctrl.boxDiscounts).description"></span></td>
       <td><span ng-bind="u.quantity"></span></td>
       <td><span ng-bind="u.amount"></span></td>
+      <td>
+        <button type="button" ng-click="ctrl.edit(u,'boxDiscount')" class="btn btn-success custom-width">Editar</button>
+        <button type="button" ng-click="ctrl.remove($index,'boxDiscount')" class="btn btn-danger custom-width">Eliminar</button>
+      </td>
     </tr>
     <tr>
-      <td><span>SUBTOTAL DESCUENTOS CAJA: ${{ctrl.getTotal()}}</span></td>
+      <td><span>SUBTOTAL DESCUENTOS CAJA: ${{ctrl.ticket.subtotalBoxDiscount}}</span></td>
     </tr>
     </tbody>
   </table>
