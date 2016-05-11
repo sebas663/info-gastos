@@ -330,7 +330,7 @@ function CompanyCtrl ($scope, CompanyService,$mdDialog) {
         parent: parentEl,
         scope:$scope,         // use parent scope in template
         preserveScope: true,
-        templateUrl:'../../views/directives-templates/master-company-form.html',
+        templateUrl:'views/directives-templates/master-company-form.html',
         controller:function($scope, $mdDialog) {
           $scope.closeDialog = function() {
             $mdDialog.hide();
@@ -384,7 +384,7 @@ function ProductCtrl ($scope, ProductService,$mdDialog) {
         parent: parentEl,
         scope:$scope,         // use parent scope in template
         preserveScope: true,
-        templateUrl:'../../views/directives-templates/master-product-form.html',
+        templateUrl:'views/directives-templates/master-product-form.html',
         controller:function($scope, $mdDialog) {
           $scope.closeDialog = function() {
             $mdDialog.hide();
@@ -438,7 +438,7 @@ function BoxDiscountCtrl ($scope, BoxDiscountService,$mdDialog) {
       parent: parentEl,
       scope:$scope,         // use parent scope in template
       preserveScope: true,
-      templateUrl:'../../views/directives-templates/master-box-discount-form.html',
+      templateUrl:'views/directives-templates/master-box-discount-form.html',
       controller:function($scope, $mdDialog) {
         $scope.closeDialog = function() {
           $mdDialog.hide();
@@ -492,7 +492,7 @@ function CreditCardDiscountCtrl ($scope, CreditCardDiscountService, $mdDialog) {
       parent: parentEl,
       scope:$scope,         // use parent scope in template
       preserveScope: true,
-      templateUrl:'../../views/directives-templates/master-credit-card-discount-form.html',
+      templateUrl:'views/directives-templates/master-credit-card-discount-form.html',
       controller:function($scope, $mdDialog) {
         $scope.closeDialog = function() {
           $mdDialog.hide();
