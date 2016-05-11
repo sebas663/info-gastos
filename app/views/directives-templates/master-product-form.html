@@ -15,31 +15,31 @@
             <form name="contactForm" ng-submit="submit()">
               <md-input-container>
                 <label>Descripcion:</label>
-                <input ng-model="product.description" required>
+                <input ng-model="masterProduct.description" required>
               </md-input-container>
              <md-input-container>
                 <label>Tipo:</label>
-                <input  ng-model="product.type" required>
+                <input  ng-model="masterProduct.type" required>
               </md-input-container>
               <md-input-container>
                 <label>Subtipo:</label>
-                <input  ng-model="product.subtype" required>
+                <input  ng-model="masterProduct.subtype" required>
               </md-input-container>
               <md-input-container>
                 <label>Marca:</label>
-                <input  ng-model="product.brand" >
+                <input  ng-model="masterProduct.brand" >
               </md-input-container>
               <md-input-container flex>
                 <label>Envase:</label>
-                <input  ng-model="product.packaging" >
+                <input  ng-model="masterProduct.packaging" >
               </md-input-container>
               <md-input-container flex>
                 <label>Tamaño:</label>
-                <input  ng-model="product.size" >
+                <input  ng-model="masterProduct.size" >
               </md-input-container>
               <md-input-container>
                 <label>Codigo:</label>
-                <input  ng-model="product.code" required>
+                <input  ng-model="masterProduct.code" required>
               </md-input-container>
               <md-button type="submit" class="md-primary"  aria-label="Save Project">Guardar</md-button>
             </form>

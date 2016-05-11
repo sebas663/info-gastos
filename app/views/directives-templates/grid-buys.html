@@ -9,7 +9,7 @@
    <div class="form-group">
       <div class="col-xs-4">
        <label for="lblcompany" class="form-control-label">Empresa: </label>
-       <input type="text" class="form-control "  id="lblcompany" ng-value="ctrl.getObjectById(ctrl.ticket.companyID,ctrl.companies).description" readonly style="width: 450px;">
+       <input type="text" class="form-control "  id="lblcompany" ng-value="ctrl.getObjectById(ctrl.ticket.companyID,ctrl.masterCompanies).description" readonly style="width: 450px;">
      </div>
    </div>
 </div>
@@ -32,10 +32,7 @@
     </thead>
     <tbody>
     <tr ng-repeat="u in ctrl.ticket.buys">
-<!--            <td><span ng-bind="u.id"></span></td>
-      <td><span ng-bind="u.buyDate| date: 'dd-MM-yyyy'"></span></td>
-      <td><span ng-bind="ctrl.getCompanyById(u.companyID).description"></span></td>-->
-      <td><span ng-bind="ctrl.getObjectById(u.productID,ctrl.products).description"></span></td>
+      <td><span ng-bind="ctrl.getObjectById(u.productID,ctrl.masterProducts).description"></span></td>
       <td><span ng-bind="u.external_code"></span></td>
       <td><span ng-bind="u.quantity"></span></td>
       <td><span ng-bind="u.price"></span></td>

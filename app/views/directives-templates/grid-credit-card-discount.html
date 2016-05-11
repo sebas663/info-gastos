@@ -10,7 +10,7 @@
     </thead>
     <tbody>
     <tr ng-repeat="u in ctrl.ticket.creditCardDiscounts">
-      <td><span ng-bind="ctrl.getObjectById(u.creditCardDiscountID,ctrl.creditCardDiscounts).description"></span></td>
+      <td><span ng-bind="ctrl.getObjectById(u.creditCardDiscountID,ctrl.masterCreditCardDiscounts).description"></span></td>
       <td><span ng-bind="u.percent"></span></td>
       <td><span ng-bind="u.amount"></span></td>
       <td>

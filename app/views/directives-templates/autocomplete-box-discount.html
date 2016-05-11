@@ -5,7 +5,7 @@
           <md-autocomplete  md-selected-item="ctrl.selectedBoxDiscount"
                             md-search-text="ctrl.searchTextBoxDiscount"
                             md-selected-item-change="ctrl.selectedItemChange(item,'boxDiscount')"
-                            md-items="item in ctrl.querySearch(ctrl.searchTextBoxDiscount,ctrl.boxDiscounts)"
+                            md-items="item in ctrl.querySearch(ctrl.searchTextBoxDiscount,ctrl.masterBoxDiscounts)"
                             md-item-text="item.description"
                             md-min-length="0"
                             placeholder="Descuento de caja"

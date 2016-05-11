@@ -10,15 +10,15 @@ App.controller('CreditCardDiscountCtrl', CreditCardDiscountCtrl);
 function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageService, $filter){
 
 		  var self = this;
-          self.ticket = LocalStorageService.fetchTicket;
-          self.buy = LocalStorageService.fetchBuy;
-          self.boxDiscount = LocalStorageService.fetchBoxDiscount;
-          self.creditCardDiscount = LocalStorageService.fetchCreditCardDiscount;
+          self.ticket = null;
+          self.buy = null;
+          self.boxDiscount = null;
+          self.creditCardDiscount = null;
           self.buys=[];
-          self.boxDiscounts=[];
-          self.creditCardDiscounts=[];
-          self.companies=[];
-          self.products=[];
+          self.masterBoxDiscounts=[];
+          self.masterCreditCardDiscounts=[];
+          self.masterCompanies=[];
+          self.masterProducts=[];
 
           //autocomplete block
           self.resetAutocomplete = false;
@@ -33,17 +33,51 @@ function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageSer
                  .then(
       					       function(d) {
       						        self.ticket = d;
-                         // console.log("ticket controller " + angular.toJson(d));
       					       },
             					function(errResponse){
             						console.error(errResponse);
             					}
       			       );
           };
+          self.fetchBuy = function(){
+            LocalStorageService.fetchBuy()
+              .then(
+                function(d) {
+                  self.buy = d;
+                },
+                function(errResponse){
+                  console.error(errResponse);
+                }
+              );
+          };
+          self.fetchBoxDiscount = function(){
+            LocalStorageService.fetchBoxDiscount()
+              .then(
+                function(d) {
+                  self.boxDiscount = d;
+                },
+                function(errResponse){
+                  console.error(errResponse);
+                }
+              );
+          };
+          self.fetchCreditCardDiscount = function(){
+            LocalStorageService.fetchCreditCardDiscount()
+              .then(
+                function(d) {
+                  self.creditCardDiscount = d;
+                },
+                function(errResponse){
+                  console.error(errResponse);
+                }
+              );
+          };
           self.addBuyToTicket = function(buy,ticket){
             LocalStorageService.addBuyToTicket(buy,ticket)
               .then(
-                self.fetchTicket,
+                function(d) {
+                  self.ticket = d;
+                },
                 function(errResponse){
                   console.error('Error while creating Buy.');
                 }
@@ -54,7 +88,9 @@ function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageSer
           self.updateBuyInTicket = function(buy,ticket){
             LocalStorageService.updateBuyInTicket(buy,ticket)
 		              .then(
-				              self.fetchTicket,
+                      function(d) {
+                        self.ticket = d;
+                      },
 				              function(errResponse){
 					               console.error('Error while updating Buy.');
 				              }
@@ -64,7 +100,9 @@ function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageSer
           self.deleteBuy = function(index,ticket){
             LocalStorageService.deleteBuyInTicket(index,ticket)
 		              .then(
-				              self.fetchTicket,
+                      function(d) {
+                        self.ticket = d;
+                      },
 				              function(errResponse){
 					               console.error('Error while deleting Buy.');
 				              }
@@ -73,10 +111,12 @@ function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageSer
           self.addBoxDiscountToTicket = function(boxDiscount,ticket){
             LocalStorageService.addBoxDiscountToTicket(boxDiscount,ticket)
               .then(
-                self.fetchTicket,
-                function(errResponse){
-                  console.error('Error while creating BoxDiscount.');
-                }
+                  function(d) {
+                    self.ticket = d;
+                  },
+                  function(errResponse){
+                    console.error('Error while creating BoxDiscount.');
+                  }
               );
           };
 
@@ -85,29 +125,35 @@ function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageSer
             console.log(' updateBoxDiscountInTicket ');
             LocalStorageService.updateBoxDiscountInTicket(boxDiscount,ticket)
               .then(
-                self.fetchTicket,
-                function(errResponse){
-                  console.error('Error while updating BoxDiscount.');
-                }
+                  function(d) {
+                    self.ticket = d;
+                  },
+                  function(errResponse){
+                    console.error('Error while updating BoxDiscount.');
+                  }
               );
           };
 
           self.deleteBoxDiscount = function(index,ticket){
             LocalStorageService.deleteBoxDiscountInTicket(index,ticket)
               .then(
-                self.fetchTicket,
-                function(errResponse){
-                  console.error('Error while deleting BoxDiscount.');
-                }
+                  function(d) {
+                    self.ticket = d;
+                  },
+                  function(errResponse){
+                    console.error('Error while deleting BoxDiscount.');
+                  }
               );
           };
           self.addCreditCardDiscountToTicket = function(creditCardDiscount,ticket){
             LocalStorageService.addCreditCardDiscountToTicket(creditCardDiscount,ticket)
               .then(
-                self.fetchTicket,
-                function(errResponse){
-                  console.error('Error while creating CreditCardDiscount.');
-                }
+                  function(d) {
+                    self.ticket = d;
+                  },
+                  function(errResponse){
+                    console.error('Error while creating CreditCardDiscount.');
+                  }
               );
           };
 
@@ -115,20 +161,24 @@ function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageSer
           self.updateCreditCardDiscountInTicket = function(creditCardDiscount,ticket){
             LocalStorageService.updateCreditCardDiscountInTicket(creditCardDiscount,ticket)
               .then(
-                self.fetchTicket,
-                function(errResponse){
-                  console.error('Error while updating CreditCardDiscount.');
-                }
+                  function(d) {
+                    self.ticket = d;
+                  },
+                  function(errResponse){
+                    console.error('Error while updating CreditCardDiscount.');
+                  }
               );
           };
 
           self.deleteCreditCardDiscount = function(index,ticket){
             LocalStorageService.deleteCreditCardDiscountInTicket(index,ticket)
               .then(
-                self.fetchTicket,
-                function(errResponse){
-                  console.error('Error while deleting CreditCardDiscount.');
-                }
+                  function(d) {
+                    self.ticket = d;
+                  },
+                  function(errResponse){
+                    console.error('Error while deleting CreditCardDiscount.');
+                  }
               );
           };
 
@@ -143,6 +193,9 @@ function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageSer
           };
 
           self.fetchTicket();
+          self.fetchBuy();
+          self.fetchBoxDiscount();
+          self.fetchCreditCardDiscount();
 
           self.submitBuy = function(isNew) {
               if(isNew){
@@ -219,20 +272,19 @@ function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageSer
           self.reset = function(type){
             if(type == 'buyForm'){
               $scope.buyForm.$setPristine(); //reset Form
-              self.buy = angular.copy(oriBuy);
-              self.buy.buyDate = new Date();
+              self.fetchBuy();
               self.selectedProduct = null;
               self.searchTxtProduct = "";
             }
             else if (type == 'creditCardForm'){
               $scope.creditCardForm.$setPristine(); //reset Form
-              self.creditCardDiscount = angular.copy(oriCreditCardDiscount);
+              self.fetchCreditCardDiscount();
               self.selectedCreditCard = null;
               self.searchTextCreditCard = "";
             }
             else if (type == 'discBoxForm'){
               $scope.discBoxForm.$setPristine(); //reset Form
-              self.boxDiscount = angular.copy(oriBoxDiscount);
+              self.fetchBoxDiscount();
               self.selectedBoxDiscount = null;
               self.searchTextBoxDiscount = "";
             }
@@ -242,17 +294,17 @@ function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageSer
           *      autocomplete block
           */
           $scope.populateArray = function(array,type){
-            if(type == 'company'){
-              self.companies = array;
+            if(type == 'masterCompany'){
+              self.masterCompanies = array;
             }
-            else if (type == 'product'){
-              self.products = array;
+            else if (type == 'masterProduct'){
+              self.masterProducts = array;
             }
-            else if (type == 'boxDiscount'){
-              self.boxDiscounts = array;
+            else if (type == 'masterBoxDiscount'){
+              self.masterBoxDiscounts = array;
             }
-            else if (type == 'creditCardDiscount'){
-              self.creditCardDiscounts = array;
+            else if (type == 'masterCreditCardDiscount'){
+              self.masterCreditCardDiscounts = array;
             }
           }
 
@@ -278,7 +330,7 @@ function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageSer
            */
           function setBuyDefaults(object) {
             self.buy = angular.copy(object);
-            var result = self.getObjectById(self.buy.productID,self.products);
+            var result = self.getObjectById(self.buy.productID,self.masterProducts);
             if (result) {
               self.selectedProduct = result.description;
               self.searchTxtProduct = result.description;
@@ -286,7 +338,7 @@ function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageSer
           }
           function setBoxDiscountDefaults(object) {
             self.boxDiscount = angular.copy(object);
-            var result = self.getObjectById(self.boxDiscount.boxDiscountID,self.boxDiscounts);
+            var result = self.getObjectById(self.boxDiscount.boxDiscountID,self.masterBoxDiscounts);
             if (result) {
               self.selectedBoxDiscount = result.description;
               self.searchTextBoxDiscount = result.description;
@@ -294,7 +346,7 @@ function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageSer
           }
           function setCreditCardDiscountDefaults(object) {
             self.creditCardDiscount = angular.copy(object);
-            var result = self.getObjectById(self.creditCardDiscount.creditCardDiscountID,self.creditCardDiscounts);
+            var result = self.getObjectById(self.creditCardDiscount.creditCardDiscountID,self.masterCreditCardDiscounts);
             if (result) {
               self.selectedCreditCard = result.description;
               self.searchTextCreditCard = result.description;
@@ -304,16 +356,16 @@ function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageSer
 
 function CompanyCtrl ($scope, CompanyService,$mdDialog) {
     var self = this;
-    self.companies = [];
-    $scope.company = {id:null,description:'',entry:'',code:'',subsidiary:'',address:''};
+    self.masterCompanies = [];
+    $scope.masterCompany = {id:null,description:'',entry:'',code:'',subsidiary:'',address:''};
     $scope.showDialog = showDialog;
 
     self.fetchAll = function(){
       CompanyService.fetchAll()
         .then(
           function(d) {
-            self.companies = d;
-            $scope.populateArray(d,'company');
+            self.masterCompanies = d;
+            $scope.populateArray(d,'masterCompany');
           },
           function(errResponse){
             console.error(errResponse);
@@ -335,8 +387,8 @@ function CompanyCtrl ($scope, CompanyService,$mdDialog) {
           $scope.closeDialog = function() {
             $mdDialog.hide();
           }
-          $scope.create = function(company){
-            CompanyService.create(company)
+          $scope.create = function(obj){
+            CompanyService.create(obj)
               .then(
                 function(d) {
                   self.fetchAll();
@@ -347,8 +399,8 @@ function CompanyCtrl ($scope, CompanyService,$mdDialog) {
               );
           };
           $scope.submit = function() {
-            if($scope.company.id==null){
-              $scope.create($scope.company);
+            if($scope.masterCompany.id==null){
+              $scope.create($scope.masterCompany);
             }
             $mdDialog.hide();
           };
@@ -358,16 +410,16 @@ function CompanyCtrl ($scope, CompanyService,$mdDialog) {
   }
 function ProductCtrl ($scope, ProductService,$mdDialog) {
     var self = this;
-    self.products        = [];
-    $scope.product = {id:null,description:'',brand:'',code:'',type:'',subtype:'',size:'',packaging:''};
+    self.masterProducts        = [];
+    $scope.masterProduct = {id:null,description:'',brand:'',code:'',type:'',subtype:'',size:'',packaging:''};
     $scope.showDialog = showDialog;
 
     self.fetchAll = function(){
       ProductService.fetchAll()
         .then(
           function(d) {
-            self.products = d;
-            $scope.populateArray(d,'product');
+            self.masterProducts = d;
+            $scope.populateArray(d,'masterProduct');
           },
           function(errResponse){
             console.error(errResponse);
@@ -389,8 +441,8 @@ function ProductCtrl ($scope, ProductService,$mdDialog) {
           $scope.closeDialog = function() {
             $mdDialog.hide();
           }
-          $scope.create = function(product){
-            ProductService.create(product)
+          $scope.create = function(obj){
+            ProductService.create(obj)
               .then(
                 function(d) {
                   self.fetchAll();
@@ -401,8 +453,8 @@ function ProductCtrl ($scope, ProductService,$mdDialog) {
               );
           };
           $scope.submit = function() {
-            if($scope.product.id==null){
-              $scope.create($scope.product);
+            if($scope.masterProduct.id==null){
+              $scope.create($scope.masterProduct);
             }
             $mdDialog.hide();
           };
@@ -412,16 +464,16 @@ function ProductCtrl ($scope, ProductService,$mdDialog) {
   }
 function BoxDiscountCtrl ($scope, BoxDiscountService,$mdDialog) {
   var self = this;
-  self.boxDiscounts  = [];
-  $scope.boxDiscount = {id:null,description:'',brand:'',code:'',type:'',subtype:'',size:'',packaging:''};
+  self.masterBoxDiscounts  = [];
+  $scope.masterBoxDiscount = {id:null,description:'',brand:'',code:'',type:'',subtype:'',size:'',packaging:''};
   $scope.showDialog  = showDialog;
 
   self.fetchAll = function(){
     BoxDiscountService.fetchAll()
       .then(
         function(d) {
-          self.boxDiscounts = d;
-          $scope.populateArray(d,'boxDiscount');
+          self.masterBoxDiscounts = d;
+          $scope.populateArray(d,'masterBoxDiscount');
         },
         function(errResponse){
           console.error(errResponse);
@@ -455,8 +507,8 @@ function BoxDiscountCtrl ($scope, BoxDiscountService,$mdDialog) {
             );
         };
         $scope.submit = function() {
-          if($scope.boxDiscount.id==null){
-            $scope.create($scope.boxDiscount);
+          if($scope.masterBoxDiscount.id==null){
+            $scope.create($scope.masterBoxDiscount);
           }
           $mdDialog.hide();
         };
@@ -466,16 +518,16 @@ function BoxDiscountCtrl ($scope, BoxDiscountService,$mdDialog) {
 }
 function CreditCardDiscountCtrl ($scope, CreditCardDiscountService, $mdDialog) {
   var self = this;
-  self.creditCardDiscounts  = [];
-  $scope.creditCardDiscount = {id:null,description:'',brand:'',code:'',type:'',subtype:'',size:'',packaging:''};
+  self.masterCreditCardDiscounts  = [];
+  $scope.masterCreditCardDiscount = {id:null,description:'',brand:'',code:'',type:'',subtype:'',size:'',packaging:''};
   $scope.showDialog = showDialog;
 
   self.fetchAll = function(){
     CreditCardDiscountService.fetchAll()
       .then(
         function(d) {
-          self.creditCardDiscounts = d;
-          $scope.populateArray(d,'creditCardDiscount');
+          self.masterCreditCardDiscounts = d;
+          $scope.populateArray(d,'masterCreditCardDiscount');
         },
         function(errResponse){
           console.error(errResponse);
@@ -509,8 +561,8 @@ function CreditCardDiscountCtrl ($scope, CreditCardDiscountService, $mdDialog) {
             );
         };
         $scope.submit = function() {
-          if($scope.creditCardDiscount.id==null){
-            $scope.create($scope.creditCardDiscount);
+          if($scope.masterCreditCardDiscount.id==null){
+            $scope.create($scope.masterCreditCardDiscount);
           }
           $mdDialog.hide();
         };

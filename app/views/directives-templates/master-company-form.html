@@ -15,23 +15,23 @@
             <form name="contactForm" ng-submit="submit()">
               <md-input-container>
                 <label>Nombre:</label>
-                <input ng-model="company.description" required>
+                <input ng-model="masterCompany.description" required>
               </md-input-container>
               <md-input-container>
                 <label>Rubro:</label>
-                <input  ng-model="company.entry" required>
+                <input  ng-model="masterCompany.entry" required>
               </md-input-container>
               <md-input-container>
                 <label>Codigo:</label>
-                <input  ng-model="company.code" required>
+                <input  ng-model="masterCompany.code" required>
               </md-input-container>
               <md-input-container>
                 <label>Sucursal:</label>
-                <input  ng-model="company.subsidiary" >
+                <input  ng-model="masterCompany.subsidiary" >
               </md-input-container>
               <md-input-container flex>
                 <label>Direccion:</label>
-                <input  ng-model="company.address" >
+                <input  ng-model="masterCompany.address" >
               </md-input-container>
               <md-button type="submit" class="md-primary"  aria-label="Save Project">Guardar</md-button>
             </form>

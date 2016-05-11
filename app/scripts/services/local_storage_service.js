@@ -34,6 +34,8 @@ App.factory('LocalStorageService', ['$http', '$q', '$log', function($http, $q, $
     return getPromise(creditCardDiscount);
   }
   function addBuyToTicket(buy,ticket){
+    // console.log(angular.toJson(buy));
+    // console.log(angular.toJson(ticket));
     buy.amount = buy.quantity * buy.price;
     buy.index = ticket.buys.length;
     ticket.buys.push(buy);
@@ -179,7 +181,7 @@ App.factory('LocalStorageService', ['$http', '$q', '$log', function($http, $q, $
 					return addBuyToTicket(buy,ticket)
 							.then(
 									function(response){
-										return response.data;
+										return response;
 									},
 									function(errResponse){
 										console.error('Error while creating Buy');
@@ -217,7 +219,7 @@ App.factory('LocalStorageService', ['$http', '$q', '$log', function($http, $q, $
           return addBoxDiscountToTicket(boxDiscount,ticket)
             .then(
               function(response){
-                return response.data;
+                return response;
               },
               function(errResponse){
                 console.error('Error while creating BoxDiscount');
@@ -255,7 +257,7 @@ App.factory('LocalStorageService', ['$http', '$q', '$log', function($http, $q, $
           return addCreditCardDiscountToTicket(creditCardDiscount,ticket)
             .then(
               function(response){
-                return response.data;
+                return response;
               },
               function(errResponse){
                 console.error('Error while creating CreditCardDiscount');

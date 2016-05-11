@@ -5,7 +5,7 @@
           <md-autocomplete  md-selected-item="ctrl.selectedCompany"
                             md-search-text="ctrl.searchTxtCompany"
                             md-selected-item-change="ctrl.selectedItemChange(item,'company')"
-                            md-items="item in ctrl.querySearch(ctrl.searchTxtCompany,ctrl.companies)"
+                            md-items="item in ctrl.querySearch(ctrl.searchTxtCompany,ctrl.masterCompanies)"
                             md-item-text="item.description"
                             md-min-length="0"
                             placeholder="Empresa"

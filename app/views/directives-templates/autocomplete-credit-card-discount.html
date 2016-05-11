@@ -5,7 +5,7 @@
           <md-autocomplete  md-selected-item="ctrl.selectedCreditCard"
                             md-search-text="ctrl.searchTextCreditCard"
                             md-selected-item-change="ctrl.selectedItemChange(item,'creditCardDiscount')"
-                            md-items="item in ctrl.querySearch(ctrl.searchTextCreditCard,ctrl.creditCardDiscounts)"
+                            md-items="item in ctrl.querySearch(ctrl.searchTextCreditCard,ctrl.masterCreditCardDiscounts)"
                             md-item-text="item.description"
                             md-min-length="0"
                             placeholder="Tarjeta bancaria"

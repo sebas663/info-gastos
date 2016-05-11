@@ -10,7 +10,7 @@
     </thead>
     <tbody>
     <tr ng-repeat="u in ctrl.ticket.boxDiscounts">
-      <td><span ng-bind="ctrl.getObjectById(u.boxDiscountID,ctrl.boxDiscounts).description"></span></td>
+      <td><span ng-bind="ctrl.getObjectById(u.boxDiscountID,ctrl.masterBoxDiscounts).description"></span></td>
       <td><span ng-bind="u.quantity"></span></td>
       <td><span ng-bind="u.amount"></span></td>
       <td>

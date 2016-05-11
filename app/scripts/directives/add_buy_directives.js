@@ -12,7 +12,7 @@ App.directive('companyAutocomplete', function() {
 });
 App.directive('discountAutocomplete', function() {
   return {
-    templateUrl: 'views/directives-templates/autocomplete-discount.html'
+    templateUrl: 'views/directives-templates/autocomplete-box-discount.html'
   };
 });
 App.directive('creditCardAutocomplete', function() {
