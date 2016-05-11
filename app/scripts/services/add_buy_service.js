@@ -14,63 +14,18 @@ App.factory('BuyService', ['$http', '$q', '$log', function($http, $q, $log){
                     }
                 );
         },
-
-		    createBuy: function(buy){
-					return $http.post(url + '/Buy/add/', buy)
-							.then(
-									function(response){
-										return response.data;
-									},
-									function(errResponse){
-										console.error('Error while creating buy');
-										return $q.reject(errResponse);
-									}
-							);
-		    },
-        BuyToList: function(buy){
-          oriTicket.buys.push(buy);
-          return oriTicket;
-        },
-
-		    updateBuy: function(buy, id){
-					return $http.put(url + '/Buy/update/' + id, buy)
-							.then(
-									function(response){
-										return response.data;
-									},
-									function(errResponse){
-										console.error('Error while updating buy');
-										return $q.reject(errResponse);
-									}
-							);
-			},
-
-			deleteBuy: function(id){
-					return $http.delete( url + '/Buy/delete/'+id)
-							.then(
-									function(response){
-										return response.data;
-									},
-									function(errResponse){
-										console.error('Error while deleting buy');
-										return $q.reject(errResponse);
-									}
-							);
-			},
-
-      saveBuys: function(buys){
-        return $http.post( url + '/Buy/save/' , angular.toJson(buys))
-          .then(
-            function(response){
-              return response.data;
-            },
-            function(errResponse){
-              console.error('Error while saving buys');
-              return $q.reject(errResponse);
-            }
-          );
-      }
-
+        saveTicket: function(ticket){
+          return $http.post( url + '/Buy/save/' , angular.toJson(ticket))
+            .then(
+              function(response){
+                return response.data;
+              },
+              function(errResponse){
+                console.error('Error while saving ticket');
+                return $q.reject(errResponse);
+              }
+            );
+        }
 	};
 
 }]);

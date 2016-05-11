@@ -1,9 +1,37 @@
 'use strict';
 
 App.factory('LocalStorageService', ['$http', '$q', '$log', function($http, $q, $log){
-  var oriTicket = {id:null,companyID:null,buyDate:new Date(),total:null,buys:[],boxDiscounts:[],creditCardDiscounts:[]};
+  var oriTicket = {
+    id:null,
+    companyID:null,
+    buyDate:new Date(),
+    subtotal:null,
+    subtotalBoxDiscount:null,
+    subtotalCreditCardDiscount:null,
+    total:null,
+    buys:[],
+    boxDiscounts:[],
+    creditCardDiscounts:[]
+  };
+  var oriBuy = {id:null,index:null,productID:null,external_code:'',quantity:null,price:null,amount:null};
+  var oriBoxDiscount = {id:null,index:null,boxDiscountID:null,percent:null,amount:null};
+  var oriCreditCardDiscount = {id:null,index:null,creditCardDiscountID:null,amount:null,base:null};
+  var ticket = angular.copy(oriTicket);
+  var buy = angular.copy(oriBuy);
+  var boxDiscount = angular.copy(oriBoxDiscount);
+  var creditCardDiscount = angular.copy(oriCreditCardDiscount);
+
   function fetchTicket(){
-    return getPromise(oriTicket);
+    return getPromise(ticket);
+  }
+  function fetchBuy(){
+    return getPromise(buy);
+  }
+  function fetchBoxDiscount(){
+    return getPromise(boxDiscount);
+  }
+  function fetchCreditCardDiscount(){
+    return getPromise(creditCardDiscount);
   }
   function addBuyToTicket(buy,ticket){
     buy.amount = buy.quantity * buy.price;
@@ -94,13 +122,15 @@ App.factory('LocalStorageService', ['$http', '$q', '$log', function($http, $q, $
     }
     return total;
   }
+  function resetTicket(){
+    ticket = angular.copy(oriTicket);
+    return ticket;
+  }
 	return {
         fetchTicket: function() {
           return fetchTicket()
                 .then(
                     function(response){
-                      // console.log("response" + angular.toJson(response));
-                      // console.log("response.data" + angular.toJson(response.data));
                       return response;
                     },
                     function(errResponse){
@@ -109,7 +139,42 @@ App.factory('LocalStorageService', ['$http', '$q', '$log', function($http, $q, $
                     }
                 );
         },
-
+        fetchBuy: function() {
+          return fetchBuy()
+            .then(
+              function(response){
+                return response;
+              },
+              function(errResponse){
+                console.error(errResponse);
+                return $q.reject(errResponse);
+              }
+            );
+        },
+        fetchBoxDiscount: function() {
+          return fetchBoxDiscount()
+            .then(
+              function(response){
+                return response;
+              },
+              function(errResponse){
+                console.error(errResponse);
+                return $q.reject(errResponse);
+              }
+            );
+        },
+        fetchCreditCardDiscount: function() {
+          return fetchCreditCardDiscount()
+            .then(
+              function(response){
+                return response;
+              },
+              function(errResponse){
+                console.error(errResponse);
+                return $q.reject(errResponse);
+              }
+            );
+        },
         addBuyToTicket: function(buy,ticket){
 					return addBuyToTicket(buy,ticket)
 							.then(
@@ -223,7 +288,19 @@ App.factory('LocalStorageService', ['$http', '$q', '$log', function($http, $q, $
                 return $q.reject(errResponse);
               }
             );
+        },
+        resetTicket: function(){
+          return resetTicket()
+            .then(
+              function(response){
+                return response;
+              },
+              function(errResponse){
+                console.error('Error while deleting CreditCardDiscount');
+                return $q.reject(errResponse);
+              }
+            );
         }
-  };
+      };
 
 }]);

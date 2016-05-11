@@ -10,25 +10,10 @@ App.controller('CreditCardDiscountCtrl', CreditCardDiscountCtrl);
 function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageService, $filter){
 
 		  var self = this;
-          var oriTicket = {
-                          id:null,
-                          companyID:null,
-                          buyDate:null,
-                          subtotal:null,
-                          subtotalBoxDiscount:null,
-                          subtotalCreditCardDiscount:null,
-                          total:null,
-                          buys:[],
-                          boxDiscounts:[],
-                          creditCardDiscounts:[]
-                         };
-          var oriBuy = {id:null,index:null,productID:null,external_code:'',quantity:null,price:null,amount:null};
-          var oriBoxDiscount = {id:null,index:null,boxDiscountID:null,percent:null,amount:null};
-          var oriCreditCardDiscount = {id:null,index:null,creditCardDiscountID:null,amount:null,base:null};
-          self.ticket = angular.copy(oriTicket);
-          self.buy = angular.copy(oriBuy);
-          self.boxDiscount = angular.copy(oriBoxDiscount);
-          self.creditCardDiscount = angular.copy(oriCreditCardDiscount);
+          self.ticket = LocalStorageService.fetchTicket;
+          self.buy = LocalStorageService.fetchBuy;
+          self.boxDiscount = LocalStorageService.fetchBoxDiscount;
+          self.creditCardDiscount = LocalStorageService.fetchCreditCardDiscount;
           self.buys=[];
           self.boxDiscounts=[];
           self.creditCardDiscounts=[];
@@ -147,18 +132,18 @@ function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageSer
               );
           };
 
-          self.saveBuys = function(buys){
-            BuyService.saveBuys(buys)
+          self.saveTicket = function(ticket){
+            BuyService.saveTicket(ticket)
               .then(
                 self.fetchTicket,
                 function(errResponse){
-                  console.error('Error while save Buys.');
+                  console.error('Error while save ticket.');
                 }
               );
           };
 
           self.fetchTicket();
-  
+
           self.submitBuy = function(isNew) {
               if(isNew){
                 self.isDisabledImputs = true;
@@ -191,15 +176,9 @@ function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageSer
           };
 
 
-          self.submitBuys = function() {
-            if( self.buys.length > 0 ){
-
-              self.saveBuys(self.buys);
-            }else{
-//                  console.log('User updated with id ', self.user.id);
-            }
-            self.reset();
-
+          self.submitTicket = function() {
+            self.saveTicket(self.ticket);
+            LocalStorageService.resetTicket();
           };
 
           self.edit = function(obj,type){
@@ -351,7 +330,7 @@ function CompanyCtrl ($scope, CompanyService,$mdDialog) {
         parent: parentEl,
         scope:$scope,         // use parent scope in template
         preserveScope: true,
-        templateUrl:'views/directives-templates/formNewCompany.html',
+        templateUrl:'../../views/directives-templates/master-company-form.html',
         controller:function($scope, $mdDialog) {
           $scope.closeDialog = function() {
             $mdDialog.hide();
@@ -405,7 +384,7 @@ function ProductCtrl ($scope, ProductService,$mdDialog) {
         parent: parentEl,
         scope:$scope,         // use parent scope in template
         preserveScope: true,
-        templateUrl:'views/directives-templates/formNewProduct.html',
+        templateUrl:'../../views/directives-templates/master-product-form.html',
         controller:function($scope, $mdDialog) {
           $scope.closeDialog = function() {
             $mdDialog.hide();
@@ -459,7 +438,7 @@ function BoxDiscountCtrl ($scope, BoxDiscountService,$mdDialog) {
       parent: parentEl,
       scope:$scope,         // use parent scope in template
       preserveScope: true,
-      templateUrl:'views/directives-templates/formNewBoxDiscount.html',
+      templateUrl:'../../views/directives-templates/master-box-discount-form.html',
       controller:function($scope, $mdDialog) {
         $scope.closeDialog = function() {
           $mdDialog.hide();
@@ -513,7 +492,7 @@ function CreditCardDiscountCtrl ($scope, CreditCardDiscountService, $mdDialog) {
       parent: parentEl,
       scope:$scope,         // use parent scope in template
       preserveScope: true,
-      templateUrl:'views/directives-templates/formNewCreditCardDiscount.html',
+      templateUrl:'../../views/directives-templates/master-credit-card-discount-form.html',
       controller:function($scope, $mdDialog) {
         $scope.closeDialog = function() {
           $mdDialog.hide();

@@ -2,51 +2,51 @@
 
 App.directive('productAutocomplete', function($mdDialog,$log) {
 	  return {
-	    templateUrl: 'views/directives-templates/product-autocomplete.html'
+	    templateUrl: '../../views/directives-templates/autocomplete-product.html'
     };
 });
 App.directive('companyAutocomplete', function() {
 		return {
-		  templateUrl: 'views/directives-templates/company-autocomplete.html'
+		  templateUrl: '../../views/directives-templates/autocomplete-company.html'
 		};
 });
 App.directive('discountAutocomplete', function() {
   return {
-    templateUrl: 'views/directives-templates/discount-autocomplete.html'
+    templateUrl: '../../views/directives-templates/autocomplete-discount.html'
   };
 });
 App.directive('creditCardAutocomplete', function() {
   return {
-    templateUrl: 'views/directives-templates/credit-card-autocomplete.html'
+    templateUrl: '../../views/directives-templates/autocomplete-credit-card-discount.html'
   };
 });
 App.directive('buysGrid', function() {
   return {
-    templateUrl: 'views/directives-templates/buysGrid.html'
+    templateUrl: '../../views/directives-templates/grid-buys.html'
   };
 });
 App.directive('discountBoxGrid', function() {
   return {
-    templateUrl: 'views/directives-templates/discountBoxGrid.html'
+    templateUrl: '../../views/directives-templates/grid-discount-box.html'
   };
 });
 App.directive('discountCreditCardGrid', function() {
   return {
-    templateUrl: 'views/directives-templates/discountCreditCardGrid.html'
+    templateUrl: '../../views/directives-templates/grid-credit-card-discount.html'
   };
 });
 App.directive('formBoxDiscount', function() {
   return {
-    templateUrl: 'views/directives-templates/formBoxDiscount.html'
+    templateUrl: '../../views/directives-templates/form-box-discount.html'
   };
 });
 App.directive('formCreditCardDiscount', function() {
   return {
-    templateUrl: 'views/directives-templates/formCreditCardDiscount.html'
+    templateUrl: '../../views/directives-templates/form-credit-card-discount.html'
   };
 });
 App.directive('formBuys', function() {
   return {
-    templateUrl: 'views/directives-templates/formBuys.html'
+    templateUrl: '../../views/directives-templates/form-buys.html'
   };
 });
