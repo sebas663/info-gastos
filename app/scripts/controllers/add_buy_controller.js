@@ -1,13 +1,13 @@
 'use strict';
 
-App.controller('AddBuyController', AddBuyController);
+App.controller('AddTicketController', AddTicketController);
 App.controller('CompanyCtrl', CompanyCtrl);
 App.controller('ProductCtrl', ProductCtrl);
 App.controller('BoxDiscountCtrl', BoxDiscountCtrl);
 App.controller('CreditCardDiscountCtrl', CreditCardDiscountCtrl);
 
 
-function AddBuyController ($scope,BuyService,AutocompleteService,LocalStorageService, $filter){
+function AddTicketController ($scope, BuyService, AutocompleteService, LocalStorageService, $filter){
 
 		  var self = this;
           self.ticket = null;

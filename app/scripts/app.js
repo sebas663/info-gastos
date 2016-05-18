@@ -20,15 +20,15 @@ var App = angular.module('infoGastosApp',[
 App.config(function($routeProvider) {
   $routeProvider
     .when('/addBuy', {
-      templateUrl: 'home.html',
-      controller: 'StudentController'
+      templateUrl: 'views/templates/addTicket.html',
+      controller: 'AddTicketController'
     })
-    .when('/viewStudents', {
-      templateUrl: 'viewStudents.html',
-      controller: 'StudentController'
+    .when('/dataExploitation', {
+      templateUrl: 'views/templates/dataExploitation.html',
+      controller: 'AddTicketController'
     })
     .otherwise({
-      redirectTo: '/home'
+      redirectTo: '/addBuy'
     });
 });
 

@@ -41,9 +41,9 @@
           <div class="collapse navbar-collapse" id="js-navbar-collapse">
 
             <ul class="nav navbar-nav">
-              <li class="active"><a href="#/">Home</a></li>
-              <li><a ng-href="#/">About</a></li>
-              <li><a ng-href="#/">Contact</a></li>
+              <!--<li class="active"><a href="#/">Home</a></li>-->
+              <li><a ng-href="#/addBuy" class="active">Agregar un ticket</a></li>
+              <li><a ng-href="#/dataExploitation">Explotacion de datos</a></li>
             </ul>
           </div>
         </div>
@@ -51,7 +51,7 @@
     </div>
 
     <div class="container custom-width_100">
-      <!--<div ng-include="'views/main.html'" ng-controller="MainCtrl"></div>-->
+      <!--<div ng-include="'views/templates/addTicket.html'" ng-controller="MainCtrl"></div>-->
       <ng-view></ng-view>
 
     </div>
@@ -91,7 +91,6 @@
         <script src="scripts/amazon/svg-assets-cache.js"></script>
         <script src="angular-material/angular-material.js"></script>
         <script src="scripts/app.js"></script>
-        <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/add_buy_controller.js"></script>
         <script src="scripts/services/add_buy_service.js"></script>
         <script src="scripts/services/company_service.js"></script>
@@ -101,6 +100,7 @@
         <script src="scripts/services/autocomplete_service.js"></script>
         <script src="scripts/services/local_storage_service.js"></script>
         <script src="scripts/directives/add_buy_directives.js"></script>
+
     <!-- endbuild -->
 </body>
 </html>
