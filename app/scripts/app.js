@@ -13,6 +13,23 @@ var App = angular.module('infoGastosApp',[
     'ngAnimate',
     'ngMaterial',
     'ngMessages',
-    'material.svgAssetsCache'
+    'material.svgAssetsCache',
+    'ngRoute'
   ]);
-  
+
+App.config(function($routeProvider) {
+  $routeProvider
+    .when('/addBuy', {
+      templateUrl: 'home.html',
+      controller: 'StudentController'
+    })
+    .when('/viewStudents', {
+      templateUrl: 'viewStudents.html',
+      controller: 'StudentController'
+    })
+    .otherwise({
+      redirectTo: '/home'
+    });
+});
+
+
