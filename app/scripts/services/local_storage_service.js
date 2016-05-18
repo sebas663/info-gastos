@@ -126,7 +126,7 @@ App.factory('LocalStorageService', ['$http', '$q', '$log', function($http, $q, $
   }
   function resetTicket(){
     ticket = angular.copy(oriTicket);
-    return ticket;
+    return getPromise(ticket);
   }
 	return {
         fetchTicket: function() {
