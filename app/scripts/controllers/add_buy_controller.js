@@ -19,14 +19,11 @@ function AddTicketController ($scope, BuyService, AutocompleteService, LocalStor
           self.masterCreditCardDiscounts=[];
           self.masterCompanies=[];
           self.masterProducts=[];
-
-          //autocomplete block
-          self.resetAutocomplete = false;
           self.querySearch  = AutocompleteService.querySearch;
           self.getObjectById  = AutocompleteService.getObjectById;
-          //autocomplete block
           self.isDisabledImputs = false;
           self.isNewRecord = true;
+          self.tabSelectedIndex = 0;
 
           self.fetchTicket = function(){
             LocalStorageService.fetchTicket()
@@ -232,6 +229,10 @@ function AddTicketController ($scope, BuyService, AutocompleteService, LocalStor
           self.submitTicket = function() {
             self.saveTicket(self.ticket);
             LocalStorageService.resetTicket();
+            self.isDisabledImputs = false;
+            self.selectedCompany = null;
+            self.searchTxtCompany = "";
+            self.tabSelectedIndex = 0;
           };
 
           self.edit = function(obj,type){
